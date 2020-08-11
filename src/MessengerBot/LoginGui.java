@@ -1,0 +1,92 @@
+package MessengerBot;
+
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class LoginGui extends JFrame {
+	public static boolean finished = false;
+	private JPanel contentPane;
+	private JTextField emailField;
+	private JPasswordField passwordField;
+	private JLabel passwordLabel;
+
+	public LoginGui() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
+		setBounds(100, 100, 450, 282);
+		setLocationRelativeTo(null);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit ?", "MessengerBot", JOptionPane.QUESTION_MESSAGE);
+		        if(response == JOptionPane.YES_OPTION)
+		        {
+		        	Scraper.Singleton().quit();
+		        	dispose();
+		        	System.exit(0);
+		        }
+		    }
+		});
+		JLabel imgLabel = new JLabel();
+		imgLabel.setBounds(182, 25, 64, 64);
+		ImageIcon img = new ImageIcon(LoginGui.class.getResource("/importedFiles/robot64p.png"));
+		imgLabel.setIcon(img);
+		contentPane.add(imgLabel);
+		
+		emailField = new JTextField();
+		emailField.setBounds(125, 118, 188, 20);
+		contentPane.add(emailField);
+		emailField.setColumns(10);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(125, 164, 188, 20);
+		contentPane.add(passwordField);
+		
+		JLabel emailLabel = new JLabel("email");
+		emailLabel.setBounds(60, 121, 46, 14);
+		contentPane.add(emailLabel);
+		
+		passwordLabel = new JLabel("password");
+		passwordLabel.setBounds(60, 167, 64, 14);
+		contentPane.add(passwordLabel);
+		
+		JButton signButton = new JButton("sign in");
+		signButton.setBounds(175, 209, 78, 23);
+		contentPane.add(signButton);
+		signButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String email = emailField.getText();
+				char[] password = passwordField.getPassword();
+				signButton.setEnabled(false);
+				Scraper.Singleton().login(email, new String(password));
+				signButton.setEnabled(true);
+				password = null;
+				if(Scraper.Singleton().isLoggedInSuccessfully())
+				{
+					AppSetup.Singleton().submitLoginStatus(true);
+					finished = true;
+					dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Wrong email or password", "MessengerBot", 
+							JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/robot64p.png")));
+				}
+			}
+		});
+	}
+}
