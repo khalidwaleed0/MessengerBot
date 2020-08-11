@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -19,7 +20,8 @@ public class LoginGui extends JFrame {
 	private JTextField emailField;
 	private JPasswordField passwordField;
 	private JLabel passwordLabel;
-
+	private JLabel loginStatusLabel = new JLabel("");
+	
 	public LoginGui() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
 		setBounds(100, 100, 450, 282);
@@ -48,6 +50,11 @@ public class LoginGui extends JFrame {
 		contentPane.add(imgLabel);
 		
 		emailField = new JTextField();
+		emailField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				login();
+			}
+		});
 		emailField.setBounds(125, 118, 188, 20);
 		contentPane.add(emailField);
 		emailField.setColumns(10);
@@ -56,37 +63,59 @@ public class LoginGui extends JFrame {
 		passwordField.setBounds(125, 164, 188, 20);
 		contentPane.add(passwordField);
 		
-		JLabel emailLabel = new JLabel("email");
-		emailLabel.setBounds(60, 121, 46, 14);
+		JLabel emailLabel = new JLabel("Facebook Email");
+		emailLabel.setBounds(23, 121, 92, 14);
 		contentPane.add(emailLabel);
 		
 		passwordLabel = new JLabel("password");
-		passwordLabel.setBounds(60, 167, 64, 14);
+		passwordLabel.setBounds(23, 167, 69, 14);
 		contentPane.add(passwordLabel);
 		
 		JButton signButton = new JButton("sign in");
 		signButton.setBounds(175, 209, 78, 23);
 		contentPane.add(signButton);
+		
+		loginStatusLabel.setBounds(10, 218, 155, 14);
+		contentPane.add(loginStatusLabel);
 		signButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String email = emailField.getText();
-				char[] password = passwordField.getPassword();
-				signButton.setEnabled(false);
-				Scraper.Singleton().login(email, new String(password));
-				signButton.setEnabled(true);
-				password = null;
-				if(Scraper.Singleton().isLoggedInSuccessfully())
-				{
-					AppSetup.Singleton().submitLoginStatus(true);
-					finished = true;
-					dispose();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Wrong email or password", "MessengerBot", 
-							JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/robot64p.png")));
-				}
+				login();
 			}
 		});
+	}
+	private void login()
+	{
+		String email = emailField.getText();
+		char[] password = passwordField.getPassword();
+		LoginWorker worker = new LoginWorker(email, new String(password));
+		loginStatusLabel.setText("Signing in..");
+		worker.execute();
+		password = null;
+	}
+	private class LoginWorker extends SwingWorker<Void,Void>{
+		String email,password;
+		public LoginWorker(String email, String password)
+		{
+			this.email = email;
+			this.password = password;
+		}
+		@Override
+		protected Void doInBackground() throws Exception {
+			Scraper.Singleton().login(email, password);
+			password = null;
+			if(Scraper.Singleton().isLoggedInSuccessfully())
+			{
+				AppSetup.Singleton().submitLoginStatus(true);
+				finished = true;
+				dispose();
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Wrong email or password", "MessengerBot", 
+						JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/importedFiles/robot64p.png")));
+			}
+			loginStatusLabel.setText("");
+			return null;
+		}
 	}
 }

@@ -144,6 +144,7 @@ public class SettingsGui extends JFrame {
 		JButton btnAutoReply = new JButton("Auto Reply for specific words");
 		btnAutoReply.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Coming Soon..");
 			}
 		});
 		btnAutoReply.setBounds(223, 206, 201, 25);

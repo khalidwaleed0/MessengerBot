@@ -62,6 +62,7 @@ public class MainClass {
 			}
 		}
 		Tray.Singleton().createTrayIcon();
+		Scraper.Singleton().checkMessengerLanguage();
 		while(true)
 		{
 			Scraper.Singleton().scrap();

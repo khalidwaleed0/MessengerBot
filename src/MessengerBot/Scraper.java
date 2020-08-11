@@ -24,18 +24,12 @@ public class Scraper {
 	
 	public void setup()
 	{
-		long x = System.currentTimeMillis();
 		System.setProperty("webdriver.chrome.driver", System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\chromedriver83.exe");
 		HashMap<String, Object> chromePrefs = createChromePrefs();
 		ChromeOptions chromeOptions = createChromeOptions(chromePrefs);
 		driver = new ChromeDriver(chromeOptions);
 		driver.manage().window().setSize(new Dimension(1900,980));
 		driver.get("https://www.messenger.com/");
-		System.out.println(System.currentTimeMillis() - x);
-		if(isArabic())
-			newChatName = "ul[aria-label=\"قائمة المحادثات\"] li[aria-live=\"polite\"";
-		else
-			newChatName = "ul[aria-label=\"Conversation List\"] li[aria-live=\"polite\"";
 	}
 	
 	private HashMap<String, Object> createChromePrefs()
@@ -56,12 +50,12 @@ public class Scraper {
 		chromeOptions.addArguments("--mute-audio");
 		return chromeOptions;
 	}
-	private boolean isArabic()
+	public void checkMessengerLanguage()
 	{
 		if(driver.findElement(By.cssSelector("._6-xo")).getText().equals("الدردشات"))
-			return true;
+			newChatName = "ul[aria-label=\"قائمة المحادثات\"] li[aria-live=\"polite\"";
 		else
-			return false;
+			newChatName = "ul[aria-label=\"Conversation List\"] li[aria-live=\"polite\"";
 	}
 //	public void screenshot()
 //	{
