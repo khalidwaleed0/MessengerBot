@@ -1,9 +1,15 @@
 package MessengerBot;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -48,6 +54,7 @@ public class Scraper {
 	    chromeOptions.addArguments("--disable-gpu");
 		chromeOptions.addArguments("user-data-dir="+System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
 		chromeOptions.addArguments("--mute-audio");
+	    chromeOptions.addArguments("use-fake-ui-for-media-stream");
 		return chromeOptions;
 	}
 	public void checkMessengerLanguage()
@@ -97,7 +104,7 @@ public class Scraper {
 	public void scrap()
 	{
 		cancelCall();
-	    try {
+		try {
 	    	WebElement newChatElement = getNewChatElement();
 	    	String senderName = newChatElement.findElement(By.cssSelector("._1ht6._7st9")).getText();
 	    	String newMessage = getNewChatMessage(newChatElement);
@@ -154,7 +161,44 @@ public class Scraper {
 	{
 		driver.findElement(By.cssSelector("a[aria-label=\"Send\"]")).click();
 	}
-	
+	public void makeRecord()
+	{
+		driver.findElement(By.cssSelector("._7mki")).click();
+		sleep();
+		try {
+			driver.findElement(By.cssSelector("._30yy._7oam[title=\"Send a voice clip\"]")).click();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		sleep();
+		try {
+			driver.findElement(By.cssSelector("._3z55")).click();						
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void stopRecord()
+	{
+		try {
+			driver.findElement(By.cssSelector("._3z55")).click();			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		sleep();
+		try{
+			driver.findElement(By.cssSelector("._7mki._7mkj"));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void sleep()
+	{
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	public void quit()
 	{
 		try {

@@ -24,18 +24,21 @@ import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-public class SettingsGui extends JFrame {
+public class MainGui extends JFrame {
 
 	public static boolean finished = false;
 	private JPanel contentPane;
 
-	public SettingsGui() {
+	public MainGui() {
 		setTitle("MessengerBot");
 		Border border = BorderFactory.createLineBorder(Color.decode("#acacac"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 462, 305);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setSize(462, 305);
 		setLocationRelativeTo(null);
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -141,13 +144,29 @@ public class SettingsGui extends JFrame {
 		btnStart.setBounds(10, 207, 89, 23);
 		contentPane.add(btnStart);
 		
-		JButton btnAutoReply = new JButton("Auto Reply for specific words");
-		btnAutoReply.addActionListener(new ActionListener() {
+		JButton btnOptions = new JButton("Options");
+		btnOptions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Coming Soon..");
+				OptionsGui options = new OptionsGui();
+				options.setVisible(true);
 			}
 		});
-		btnAutoReply.setBounds(223, 206, 201, 25);
-		contentPane.add(btnAutoReply);
+		btnOptions.setBounds(316, 206, 120, 25);
+		contentPane.add(btnOptions);
+		addWindowListener((WindowListener) new WindowAdapter()
+		{
+		    public void windowClosing(WindowEvent e)
+		    {
+		    	int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit", "Exit",
+		    								JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		    	if(response == JOptionPane.YES_OPTION)
+		    	{
+		    		setVisible(false);
+		    		dispose();
+		    		Scraper.Singleton().quit();
+		    		System.exit(0);
+		    	}
+		    }
+		});
 	}
 }

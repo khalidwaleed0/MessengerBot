@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 public class Tray {
 	private TrayIcon trayIcon;
 	private static Tray  tr;
+	public boolean isPaused = false;
 	public static Tray Singleton()
 	{
 		if (tr == null) 
@@ -46,18 +47,29 @@ public class Tray {
 	private void createMenu()
 	{
 		final PopupMenu popup = new PopupMenu();
+		MenuItem pauseItem = new MenuItem("Pause");
+		MenuItem logoutItem = new MenuItem("Logout & Exit (slow)");
 	    MenuItem exitItem = new MenuItem("Exit (fast)");
-	    MenuItem logoutItem = new MenuItem("Logout & Exit (slow)");
+	    popup.add(pauseItem);
 	    popup.add(logoutItem);
 	    popup.add(exitItem);
 	    trayIcon.setPopupMenu(popup);
-	    exitItem.addActionListener(new ActionListener() {
-	    	@Override
-			public void actionPerformed(ActionEvent event) {
-				Scraper.Singleton().quit();
-	    		System.exit(0);
+	    pauseItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!isPaused)
+				{
+					isPaused = true;
+					pauseItem.setLabel("Resume");
+				}
+				else
+				{
+					isPaused = false;
+					pauseItem.setLabel("Pause");
+				}
 			}
-	    });
+		});
 	    logoutItem.addActionListener(new ActionListener() {
 	    	@Override
 			public void actionPerformed(ActionEvent event) {
@@ -66,6 +78,14 @@ public class Tray {
 	    		System.exit(0);
 			}
 	    });
+	    exitItem.addActionListener(new ActionListener() {
+	    	@Override
+			public void actionPerformed(ActionEvent event) {
+				Scraper.Singleton().quit();
+	    		System.exit(0);
+			}
+	    });
+	    
 	}
 	
 	public void notifyUser()

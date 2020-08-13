@@ -6,6 +6,7 @@ import java.io.IOException;
 public class MainClass {
 	
 	public static void main(String[] args) {
+		
 		try {
 			Updater.update();
 		} catch (IOException e1) {
@@ -46,14 +47,14 @@ public class MainClass {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SettingsGui frame2 = new SettingsGui();
+					MainGui frame2 = new MainGui();
 					frame2.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		while(!SettingsGui.finished)
+		while(!MainGui.finished)
 		{
 			try {
 				Thread.sleep(1000);
@@ -63,13 +64,27 @@ public class MainClass {
 		}
 		Tray.Singleton().createTrayIcon();
 		Scraper.Singleton().checkMessengerLanguage();
+//		Recorder recorder = new Recorder();
+//		Thread rec = new Thread(recorder);
+//		rec.start();
 		while(true)
 		{
-			Scraper.Singleton().scrap();
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if(Tray.Singleton().isPaused)
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			else		
+			{
+				Scraper.Singleton().scrap();
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

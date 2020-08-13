@@ -21,7 +21,7 @@ public class NotificationSoundPlayer implements Runnable{
 		}
 		
 	}
-	private void playSoundFile(File soundFile)
+	public void playSoundFile(File soundFile)
 	{
 		try {
 			FileInputStream fis = new FileInputStream(soundFile);
