@@ -115,7 +115,6 @@ public class AppSetup {
 			writer.write(String.valueOf(loginStatus));
 			writer.close();
 		} catch (IOException e) {
-			System.out.println("failed");
 			e.printStackTrace();
 		}
 	}
@@ -162,6 +161,37 @@ public class AppSetup {
 		if(userNameFile.exists())
 			return true;
 		return false;
+	}
+	public boolean isRecordEnabled()
+	{
+		File recordKey = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\RecordedKey.txt");
+		if(recordKey.exists())
+			return true;
+		else
+			return false;
+	}
+	public void submitRecordedKey(String recordedKey)
+	{
+		try {
+			FileWriter writer = new FileWriter(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\RecordedKey.txt"));
+			writer.write(recordedKey);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public String getRecordedKey()
+	{
+		String line = "";
+		try {
+			FileReader reader = new FileReader(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\RecordedKey.txt"));
+			BufferedReader br = new BufferedReader(reader);
+			line = br.readLine();
+			br.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return line;
 	}
 	public void logout()
 	{

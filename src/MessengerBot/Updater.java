@@ -57,6 +57,7 @@ public class Updater {
 				dialog.dispose();
 				JOptionPane.showMessageDialog(null, whatsNew, "What's New", JOptionPane.INFORMATION_MESSAGE);
 				try {
+					Scraper.Singleton().quit();
 					Desktop.getDesktop().open(batch());
 				} catch (IOException e) {
 				}
@@ -72,7 +73,7 @@ public class Updater {
 		dialog.setTitle("New Update");
 		dialog.setAlwaysOnTop(true);
 		dialog.setVisible(true);
-		dialog.setBounds(100, 100, 450, 151);
+		dialog.setSize(450, 151);
 		dialog.getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		dialog.getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -85,7 +86,7 @@ public class Updater {
 		contentPanel.add(lblDownloadInfo);
 		
 		JLabel lblTheNewVersion = new JLabel("The new Version will be on desktop and will open automatically");
-		lblTheNewVersion.setBounds(10, 87, 360, 14);
+		lblTheNewVersion.setBounds(10, 87, 370, 14);
 		contentPanel.add(lblTheNewVersion);
 	}
 	

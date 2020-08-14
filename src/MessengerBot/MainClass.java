@@ -6,7 +6,6 @@ import java.io.IOException;
 public class MainClass {
 	
 	public static void main(String[] args) {
-		
 		try {
 			Updater.update();
 		} catch (IOException e1) {
@@ -63,13 +62,12 @@ public class MainClass {
 			}
 		}
 		Tray.Singleton().createTrayIcon();
-		Scraper.Singleton().checkMessengerLanguage();
-//		Recorder recorder = new Recorder();
-//		Thread rec = new Thread(recorder);
-//		rec.start();
+		Recorder recorder = new Recorder();
+		Thread rec = new Thread(recorder);
+		rec.start();
 		while(true)
 		{
-			if(Tray.Singleton().isPaused)
+			if(recorder.isRecording || Tray.Singleton().isPaused)
 			{
 				try {
 					Thread.sleep(1000);

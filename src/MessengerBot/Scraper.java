@@ -16,7 +16,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class Scraper {
 	private ChromeDriver driver;
-	String newChatName;
 	private static Scraper sc = null;
 	private static ArrayList<String> mutedSenders = new ArrayList<String>();
 	public static Scraper Singleton() 
@@ -56,13 +55,6 @@ public class Scraper {
 		chromeOptions.addArguments("--mute-audio");
 	    chromeOptions.addArguments("use-fake-ui-for-media-stream");
 		return chromeOptions;
-	}
-	public void checkMessengerLanguage()
-	{
-		if(driver.findElement(By.cssSelector("._6-xo")).getText().equals("الدردشات"))
-			newChatName = "ul[aria-label=\"قائمة المحادثات\"] li[aria-live=\"polite\"";
-		else
-			newChatName = "ul[aria-label=\"Conversation List\"] li[aria-live=\"polite\"";
 	}
 //	public void screenshot()
 //	{
@@ -137,7 +129,7 @@ public class Scraper {
 	}
 	private WebElement getNewChatElement()
 	{
-    	WebElement newChatElement = driver.findElement(By.cssSelector(newChatName));
+    	WebElement newChatElement = driver.findElement(By.cssSelector("ul[role=\"grid\"] li[aria-live=\"polite\""));
     	return newChatElement;
 	}
 	private String getNewChatMessage(WebElement newChatElement)
@@ -149,12 +141,12 @@ public class Scraper {
 	
 	private void getTextFocus()
 	{
-		driver.findElement(By.cssSelector("div[class=\"_1mf _1mj\"]")).click();
+		driver.findElement(By.cssSelector("div[data-offset-key]")).click();
 	}
 	
 	private void writeMessage(String message)
 	{
-		driver.findElementByCssSelector("div[class=\"_1mf _1mj\"]").sendKeys(message);
+		driver.findElement(By.cssSelector("div[data-offset-key]")).sendKeys(message);
 	}
 	
 	private void sendMessage()
@@ -194,7 +186,7 @@ public class Scraper {
 	private void sleep()
 	{
 		try {
-			Thread.sleep(200);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
