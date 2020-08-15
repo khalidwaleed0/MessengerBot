@@ -1,5 +1,6 @@
 package MessengerBot;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -151,14 +152,14 @@ public class Scraper {
 	
 	private void sendMessage()
 	{
-		driver.findElement(By.cssSelector("a[aria-label=\"Send\"]")).click();
+		driver.findElement(By.cssSelector("div[data-offset-key]")).sendKeys("\n");
 	}
 	public void makeRecord()
 	{
 		driver.findElement(By.cssSelector("._7mki")).click();
 		sleep();
 		try {
-			driver.findElement(By.cssSelector("._30yy._7oam[title=\"Send a voice clip\"]")).click();
+			driver.findElement(By.cssSelector("._30yy._7oam:nth-of-type(3)")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -178,7 +179,7 @@ public class Scraper {
 		}
 		sleep();
 		try{
-			driver.findElement(By.cssSelector("._7mki._7mkj"));
+			driver.findElement(By.cssSelector("._7mki._7mkj")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,7 @@
 package MessengerBot;
 
+import java.io.File;
+
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
@@ -10,6 +12,8 @@ import lc.kra.system.mouse.event.GlobalMouseEvent;
 public class Recorder implements Runnable{
 	public boolean isRecording = false;
 	private String recordedKey;
+	private NotificationSoundPlayer nsp = new NotificationSoundPlayer();
+	private String soundName;
 	@Override
 	public void run() {
 		recordedKey = AppSetup.Singleton().getRecordedKey();
@@ -66,13 +70,21 @@ public class Recorder implements Runnable{
 	{
 		if(!isRecording)
 		{
-			Scraper.Singleton().makeRecord();
 			isRecording = true;
+			soundName = System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\recordStart.mp3";
+			nsp.soundFile = new File(soundName);
+			Thread nspThread = new Thread(nsp);
+			nspThread.start();
+			Scraper.Singleton().makeRecord();
 		}
 		else
 		{
-			Scraper.Singleton().stopRecord();
 			isRecording = false;
+			soundName = System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\sendingRecord.mp3";
+			nsp.soundFile = new File(soundName);
+	 		Thread nspThread = new Thread(nsp);
+			nspThread.start();
+			Scraper.Singleton().stopRecord();
 		}
 	}
 }

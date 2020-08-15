@@ -8,20 +8,14 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class NotificationSoundPlayer implements Runnable{
-
+	public File soundFile;
+	
 	@Override
 	public void run() {
-		File customSound = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\customSound.mp3");
-		if(customSound.exists())
-			playSoundFile(customSound);
-		else
-		{
-			File originalSound = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\originalSound.mp3");
-			playSoundFile(originalSound);
-		}
-		
+		playSoundFile(soundFile);
 	}
-	public void playSoundFile(File soundFile)
+	
+	private void playSoundFile(File soundFile)
 	{
 		try {
 			FileInputStream fis = new FileInputStream(soundFile);
