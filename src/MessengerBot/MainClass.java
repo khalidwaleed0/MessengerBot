@@ -1,11 +1,17 @@
 package MessengerBot;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class MainClass {
 	
 	public static void main(String[] args) {
+		
 		try {
 			Updater.update();
 		} catch (IOException e1) {
@@ -61,10 +67,17 @@ public class MainClass {
 				e.printStackTrace();
 			}
 		}
+		AppSetup.Singleton().getRecordedKey();
 		Tray.Singleton().createTrayIcon();
 		Recorder recorder = new Recorder();
 		Thread rec = new Thread(recorder);
 		rec.start();
+		if(AppSetup.Singleton().isOverLayEnabled)
+		{
+			Overlay overlay = new Overlay();
+			Thread overlayThread = new Thread(overlay);
+			overlayThread.start();
+		}
 		while(true)
 		{
 			if(recorder.isRecording || Tray.Singleton().isPaused)

@@ -18,7 +18,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class Scraper {
 	private ChromeDriver driver;
 	private static Scraper sc = null;
-	private static ArrayList<String> mutedSenders = new ArrayList<String>();
+	private static ArrayList<String> importantSenders = new ArrayList<String>();
 	public static Scraper Singleton() 
     { 
         if (sc == null) 
@@ -27,6 +27,14 @@ public class Scraper {
         } 
         return sc; 
     }
+	public Scraper(Overlay overlay)
+	{
+		
+	}
+	public Scraper()
+	{
+		
+	}
 	
 	public void setup()
 	{
@@ -102,20 +110,31 @@ public class Scraper {
 	    	String senderName = newChatElement.findElement(By.cssSelector("._1ht6._7st9")).getText();
 	    	String newMessage = getNewChatMessage(newChatElement);
 	    	getTextFocus();
-	    	if(newMessage.toLowerCase().contains("important"))
+	    	if(importantSenders.contains(senderName))
+	    		showOverLay(newMessage,getSenderPhoto(newChatElement));
+	    	else if(newMessage.toLowerCase().contains("important"))
 	    	{
-		    	if(!mutedSenders.contains(senderName))
-		    	{
-		    		mutedSenders.add(senderName);
-		    		writeMessage(AutoReplySettings.importantReply);
-		    		Tray.Singleton().notifyUser();
-		    	}
-		    	else
-		    		writeMessage("please wait..");
+	    		importantSenders.add(senderName);
+	    		showOverLay(newMessage,getSenderPhoto(newChatElement));
 	    	}
 	    	else
 	    		writeMessage(AutoReplySettings.generalReply);
-	    	sendMessage();
+	    		
+	    	
+//	    	if(newMessage.toLowerCase().contains("important"))
+//	    	{
+//		    	if(!mutedSenders.contains(senderName))
+//		    	{
+//		    		mutedSenders.add(senderName);
+//		    		writeMessage(AutoReplySettings.importantReply);
+//		    		Tray.Singleton().notifyUser();
+//		    	}
+//		    	else
+//		    		writeMessage("please wait..");
+//	    	}
+//	    	else
+//	    		writeMessage(AutoReplySettings.generalReply);
+//	    	sendMessage();
 	    }catch(Exception e) {
 	    	e.printStackTrace();
 	    }
@@ -127,6 +146,11 @@ public class Scraper {
 		}catch(Exception e) {
 //			e.printStackTrace();
 		}
+	}
+	private File getSenderPhoto(WebElement newChatElement)
+	{
+		File senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
+		return senderPhoto;
 	}
 	private WebElement getNewChatElement()
 	{

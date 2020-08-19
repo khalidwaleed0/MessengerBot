@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JWindow;
 
 public class SplashScreen implements Runnable{
-	private JLabel loadingText;
 	@Override
 	public void run() {
 		JWindow window = windowSetup();    	
@@ -19,7 +18,7 @@ public class SplashScreen implements Runnable{
 		window.setSize(256, 288);
 	   	window.setLocationRelativeTo(null);
     	window.getContentPane().setBackground(new Color(0, 255, 0));
-	   	loadingText = new JLabel();
+    	JLabel loadingText = new JLabel();
 		loadingText.setFont(new Font("Tahoma", Font.BOLD, 11));
 		loadingText.setBounds(10, 262, 236, 14);
 		window.add(loadingText);
@@ -27,10 +26,10 @@ public class SplashScreen implements Runnable{
     	loadingLabel.setBounds(0, 0, 256, 256);
     	window.getContentPane().add(loadingLabel);
     	window.setVisible(true);
-    	loadingInfo();
+    	loadingInfo(loadingText);
     	return window;
 	}
-	private void loadingInfo()
+	private void loadingInfo(JLabel loadingText)
 	{
 		loadingText.setText("Trying to remember your name ^_^");
 		sleep();

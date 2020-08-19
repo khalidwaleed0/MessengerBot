@@ -25,7 +25,7 @@ private static AutoReplySettings arSettings = null;
 		File basicSettings = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\basicReplySettings.txt");
 		if(!basicSettings.exists())
 		{
-			String generalReply = "this is a programmed bot, I'm busy now so if you really need me please type the word important";
+			String generalReply = "this is a programmed bot, I'm busy now so if you really need me please type the word important and then write your important message";
 			String importantReply = "OK I'll inform him as fast as possible";
 			submitBasicReplySettings(generalReply, importantReply);
 		}

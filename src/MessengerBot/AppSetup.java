@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 
 public class AppSetup {
 	private static AppSetup  appSetup;
+	public boolean isOverLayEnabled = true;
 	public static AppSetup Singleton()
 	{
 		if (appSetup == null) 
@@ -26,11 +27,11 @@ public class AppSetup {
 	{
 		String launchFolder = System.getProperty("user.dir");
 		launchFolder = launchFolder.substring(launchFolder.length()-7);
-		if(!launchFolder.equals("Desktop"))
-		{
-			JOptionPane.showMessageDialog(null, "Please move the program to the desktop and open it again", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
-			System.exit(0);
-		}
+//		if(!launchFolder.equals("Desktop"))
+//		{
+//			JOptionPane.showMessageDialog(null, "Please move the program to the desktop and open it again", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
+//			System.exit(0);
+//		}
 		checkChromeInstallation();
 		if(!isChromeDriverInstalled())
 			extractChromeDriver();
@@ -38,6 +39,7 @@ public class AppSetup {
 		createLoginStatus();
 		checkUserName();
 		AutoReplySettings.Singleton().checkBasicReplySettings();
+//		checkOverLayEnabled();
 	}
 	private void checkChromeInstallation()
 	{
@@ -193,6 +195,40 @@ public class AppSetup {
 		}
 		return line;
 	}
+//	private void checkOverLayEnabled()
+//	{
+//		File overlayStatus = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt");
+//		if(overlayStatus.exists())
+//			isOverLayEnabled = getOverLayStatus();
+//		else
+//		{
+//			isOverLayEnabled = true;
+//			submitOverLayStatus(isOverLayEnabled);
+//		}
+//	}
+//	public void submitOverLayStatus(boolean overLayStatus)
+//	{
+//		try {
+//			FileWriter writer = new FileWriter(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt"));
+//			writer.write(String.valueOf(overLayStatus));
+//			writer.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	private boolean getOverLayStatus()
+//	{
+//		String line = "";
+//		try {
+//			FileReader reader = new FileReader(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt"));
+//			BufferedReader br = new BufferedReader(reader);
+//			line = br.readLine();
+//			br.close();
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		return Boolean.valueOf(line);
+//	}
 	public void logout()
 	{
 		File cookiesFolder = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
