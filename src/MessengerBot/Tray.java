@@ -7,16 +7,13 @@ import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 public class Tray {
 	private TrayIcon trayIcon;
 	private static Tray  tr;
 	public boolean isPaused = false;
-	private NotificationSoundPlayer nsp = new NotificationSoundPlayer();
 	public static Tray Singleton()
 	{
 		if (tr == null) 
@@ -88,25 +85,5 @@ public class Tray {
 			}
 	    });
 	    
-	}
-	
-	public void notifyUser()
-	{
-		try{
-		    trayIcon.displayMessage("Messenger","Someone needs you urgently !", MessageType.NONE);
-		}catch(Exception ex){
-		    ex.printStackTrace();
-		}
-		playNotificationSound();
-	}
-	
-	private void playNotificationSound()
-	{
-		String soundName = System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\originalSound.mp3";
-		if(AppSetup.Singleton().isCustomSoundExisted())
-			soundName = System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\customSound.mp3";
-		nsp.soundFile = new File(soundName);
-		Thread soundPlayerThread = new Thread(nsp);
-		soundPlayerThread.start();
 	}
 }
