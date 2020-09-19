@@ -11,8 +11,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,7 +19,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class OptionsGui extends JDialog {
-
+	private static final long serialVersionUID = -1098215928695680623L;
 	private JPanel contentPane;
 	private JTextField recordedKeyField;
 	private JLabel startStopLabel = new JLabel("Start/Stop Record");
