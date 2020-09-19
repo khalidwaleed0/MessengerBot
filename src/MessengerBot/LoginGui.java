@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class LoginGui extends JFrame {
+	private static final long serialVersionUID = -251690788837449454L;
 	public static boolean finished = false;
 	private JPanel contentPane;
 	private JTextField emailField;

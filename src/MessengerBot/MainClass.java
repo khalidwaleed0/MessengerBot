@@ -1,33 +1,48 @@
 package MessengerBot;
 
-import java.awt.Color;
 import java.awt.EventQueue;
+import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import org.openqa.selenium.SessionNotCreatedException;
 
 public class MainClass {
 	
 	public static void main(String[] args) {
 		
 		try {
-			Updater.update();
+			AppUpdater.update();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		AppSetup.Singleton().setup();
-		if(!((AppSetup.Singleton().isCustomSoundExisted()) && AppSetup.Singleton().isUserNameExisted()))
-		{
-			CustomSoundDownloader csd = new CustomSoundDownloader();
-			Thread csDownloader = new Thread(csd);
-			csDownloader.start();
-		}		
 		SplashScreen ss = new SplashScreen();
 		Thread splashScreen = new Thread(ss);
 		splashScreen.start();
-		Scraper.Singleton().setup();
+		try {
+			Scraper.Singleton().setup();
+		}catch(SessionNotCreatedException e) {
+			try {
+				Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe");
+				File oldChromeDriver = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\chromedriver.exe");
+				oldChromeDriver.delete();
+				UpdateHelp uh = new UpdateHelp();
+				uh.setVisible(true);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		if(Scraper.Singleton().isSessionCreated == true)
+		{
+			showLoginGui();
+			showMainGui();
+			generalSetup();
+			scrapLoop();
+		}
+	}
+	
+	private static void showLoginGui()
+	{
 		if(!AppSetup.Singleton().isAlreadyLoggedIn())
 		{
 			EventQueue.invokeLater(new Runnable() {
@@ -49,6 +64,9 @@ public class MainClass {
 				}
 			}
 		}
+	}
+	private static void showMainGui()
+	{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -67,20 +85,24 @@ public class MainClass {
 				e.printStackTrace();
 			}
 		}
+	}
+	private static void generalSetup()
+	{
 		AppSetup.Singleton().getRecordedKey();
 		Tray.Singleton().createTrayIcon();
 		Recorder recorder = new Recorder();
 		Thread rec = new Thread(recorder);
 		rec.start();
-		if(AppSetup.Singleton().isOverLayEnabled)
-		{
-			Overlay overlay = new Overlay();
-			Thread overlayThread = new Thread(overlay);
-			overlayThread.start();
-		}
+		Overlay overlay = new Overlay();
+		Scraper.Singleton().passOverlay(overlay);
+		Thread overlayThread = new Thread(overlay);
+		overlayThread.start();
+	}
+	private static void scrapLoop()
+	{
 		while(true)
 		{
-			if(recorder.isRecording || Tray.Singleton().isPaused)
+			if(Recorder.isRecording || Tray.Singleton().isPaused)
 			{
 				try {
 					Thread.sleep(1000);
@@ -92,7 +114,7 @@ public class MainClass {
 			{
 				Scraper.Singleton().scrap();
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -31,11 +31,11 @@ public class SplashScreen implements Runnable{
 	}
 	private void loadingInfo(JLabel loadingText)
 	{
-		loadingText.setText("Trying to remember your name ^_^");
+		loadingText.setText("checking installation files..");
 		sleep();
 		loadingText.setText("33% please wait..");
 		sleep();
-		loadingText.setText("checking installation files..");
+		loadingText.setText("Loading Settings..");
 		sleep();
 		loadingText.setText("66% please wait..");
 		sleep();

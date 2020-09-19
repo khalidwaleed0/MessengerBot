@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Desktop;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JEditorPane;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.Font;
@@ -29,16 +29,16 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class MainGui extends JFrame {
-
+	private static final long serialVersionUID = 5937481215987949886L;
 	public static boolean finished = false;
 	private JPanel contentPane;
-
+	
 	public MainGui() {
 		setTitle("MessengerBot");
 		Border border = BorderFactory.createLineBorder(Color.decode("#acacac"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setSize(462, 305);
+		setSize(462, 237);
 		setLocationRelativeTo(null);
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -90,44 +90,27 @@ public class MainGui extends JFrame {
 		lblNewLabel.setBounds(10, 11, 268, 14);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("automatic reply for important messages");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_1.setBounds(10, 98, 268, 25);
-		contentPane.add(lblNewLabel_1);
-		
-		JEditorPane generalReplyText = new JEditorPane();
+		JTextArea generalReplyText = new JTextArea();
+		generalReplyText.setLineWrap(true);
 		generalReplyText.setText(AutoReplySettings.generalReply);
-		generalReplyText.setBounds(10, 36, 365, 51);
+		generalReplyText.setBounds(10, 36, 426, 63);
 		generalReplyText.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		contentPane.add(generalReplyText);
 		
-		JEditorPane importantReplyText = new JEditorPane();
-		importantReplyText.setText(AutoReplySettings.importantReply);
-		importantReplyText.setBounds(10, 134, 365, 51);
-		importantReplyText.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-		contentPane.add(importantReplyText);
-		
 		JButton btnApply = new JButton("Apply Changes");
 		btnApply.setVisible(false);
-		btnApply.setBounds(316, 98, 120, 23);
+		btnApply.setBounds(151, 142, 120, 23);
 		contentPane.add(btnApply);
 		
 		btnApply.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AutoReplySettings.Singleton().submitBasicReplySettings(generalReplyText.getText(), importantReplyText.getText());
+				AutoReplySettings.Singleton().submitBasicReplySettings(generalReplyText.getText());
 				JOptionPane.showMessageDialog(null, "Applied Changes Successfully", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
 				btnApply.setVisible(false);
 			}
 		});
 		
 		generalReplyText.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				btnApply.setVisible(true);
-			}
-		});
-		
-		importantReplyText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				btnApply.setVisible(true);
@@ -141,7 +124,7 @@ public class MainGui extends JFrame {
 				dispose();
 			}
 		});
-		btnStart.setBounds(10, 207, 89, 23);
+		btnStart.setBounds(10, 142, 89, 23);
 		contentPane.add(btnStart);
 		
 		JButton btnOptions = new JButton("Options");
@@ -151,7 +134,7 @@ public class MainGui extends JFrame {
 				options.setVisible(true);
 			}
 		});
-		btnOptions.setBounds(316, 206, 120, 25);
+		btnOptions.setBounds(316, 142, 120, 24);
 		contentPane.add(btnOptions);
 		addWindowListener((WindowListener) new WindowAdapter()
 		{

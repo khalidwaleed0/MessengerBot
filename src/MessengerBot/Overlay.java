@@ -8,10 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.SwingConstants;
 import javax.swing.JWindow;
 
@@ -19,42 +16,39 @@ public class Overlay implements Runnable {
 
 	public ArrayList<String> newChats = new ArrayList<String>();
 	public ArrayList<String> senderPhotos = new ArrayList<String>();
-	private JWindow window = new JWindow();
-	private JLabel newChatLabel = new JLabel("");
-	private JLabel senderPhotoLabel = new JLabel("");
-	private JPanel contentPane;
 	
 	@Override
 	public void run() {
 		while(true)
 		{
-			if(newChats.size() != 0)
-			{
-				overlaySetup();
-				displayNewChat();
-				String newChat = newChats.get(0);
-				removeSeenChat();
-				if(newChat.length() < 40)
+			try {
+				System.out.println("Overlay : "+newChats);
+				if((newChats.size() != 0) && !Recorder.isRecording)
 				{
-					newChatLabel.setSize(346, 96);
-					sleep(5000);
+					overlaySetup(newChats.get(0),0);
+					removeSeenChat();
 				}
 				else
-					sleep(9000);
-			} 
-			else
-				sleep(1000);
+					sleep(1000);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	private void overlaySetup()
+	public void overlaySetup(String newChat, int sleepTime)
 	{
+		JWindow window = new JWindow();
+		JLabel newChatLabel = new JLabel("");
+		JLabel senderPhotoLabel = new JLabel("");
+		JPanel contentPane = new JPanel();
+		
 		window.setAlwaysOnTop(true);
 		window.setBackground(new Color(0,0,0,0));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double screenWidth = screenSize.getWidth();
 		double screenHeight = screenSize.getHeight();
 		window.setLocation((int) screenWidth-450, (int) screenHeight-300);
-		contentPane = new JPanel();
+		window.setSize(450, 176);
 		contentPane.setBackground(new Color(0,0,0,0));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		window.setContentPane(contentPane);
@@ -71,11 +65,21 @@ public class Overlay implements Runnable {
 
 		senderPhotoLabel.setBounds(8, 11, 60, 60);
 		contentPane.add(senderPhotoLabel);
-	}
-	private void displayNewChat()
-	{
-		newChatLabel.setText(newChats.get(0));
-		senderPhotoLabel.setIcon(new ImageIcon(senderPhotos.get(0)));
+		
+		newChatLabel.setText("<html><div style='text-align: right;'>"+newChat+"</div></html>");
+		if(!Recorder.isRecording)
+			senderPhotoLabel.setIcon(new ImageIcon(senderPhotos.get(0)));
+		window.setVisible(true);
+		if(sleepTime == 0)
+		{
+			if(newChat.length() < 40)
+				sleep(5000);
+			else
+				sleep(9000);
+		}
+		else
+			sleep(sleepTime);
+		window.dispose();
 	}
 	private void removeSeenChat()
 	{
