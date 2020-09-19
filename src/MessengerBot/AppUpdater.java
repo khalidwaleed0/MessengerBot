@@ -21,7 +21,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class Updater {
+public class AppUpdater {
 	private static JLabel lblDownloadInfo;
 	private static JDialog dialog;
 	
