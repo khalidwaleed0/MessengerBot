@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 
 public class AppSetup {
 	private static AppSetup  appSetup;
-	public boolean isOverLayEnabled = true;
 	public static AppSetup Singleton()
 	{
 		if (appSetup == null) 
@@ -35,11 +34,8 @@ public class AppSetup {
 		checkChromeInstallation();
 		if(!isChromeDriverInstalled())
 			extractChromeDriver();
-		checkOriginalSound();
 		createLoginStatus();
-		checkUserName();
 		AutoReplySettings.Singleton().checkBasicReplySettings();
-//		checkOverLayEnabled();
 	}
 	private void checkChromeInstallation()
 	{
@@ -88,19 +84,6 @@ public class AppSetup {
 			e.printStackTrace();
 		}
 	}
-	private void checkOriginalSound()
-	{
-		File originalSound = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\originalSound.mp3");
-		if(!originalSound.exists())
-		{
-			InputStream input = (MainClass.class.getResourceAsStream("/importedFiles/originalSound.mp3"));
-			try {
-				FileUtils.copyInputStreamToFile(input, originalSound);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	private void createLoginStatus()
 	{
 		File loginStatus = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\loginStatus.txt");
@@ -109,7 +92,6 @@ public class AppSetup {
 			submitLoginStatus(false);
 		}
 	}
-	
 	public void submitLoginStatus(boolean loginStatus)
 	{
 		try {
@@ -119,50 +101,6 @@ public class AppSetup {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	public boolean isCustomSoundExisted()
-	{
-		File customSoundFile = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\customSound.mp3");
-		if(customSoundFile.exists())
-			return true;
-		return false;
-	}
-	private void checkUserName()
-	{
-		File nullUserNameFile = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\NoUserName.txt");
-		if(!(isUserNameExisted() || nullUserNameFile.exists()))
-		{
-			String userName = JOptionPane.showInputDialog(null, "Please enter your first name (Optional)\n                 -Unchangeable-", "MessengerBot"
-					, JOptionPane.INFORMATION_MESSAGE);
-			
-			if((userName!=null) && !userName.equals(""))
-			{
-				try {
-					FileWriter writer = new FileWriter(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\UserName.txt"));
-					if(userName.equals("ahmed") || userName.equals("ahmad"))
-						userName = "Hamada";
-					writer.write(userName);
-					writer.close();
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				try {
-					nullUserNameFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	public boolean isUserNameExisted()
-	{
-		File userNameFile = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\UserName.txt");
-		if(userNameFile.exists())
-			return true;
-		return false;
 	}
 	public boolean isRecordEnabled()
 	{
@@ -195,40 +133,6 @@ public class AppSetup {
 		}
 		return line;
 	}
-//	private void checkOverLayEnabled()
-//	{
-//		File overlayStatus = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt");
-//		if(overlayStatus.exists())
-//			isOverLayEnabled = getOverLayStatus();
-//		else
-//		{
-//			isOverLayEnabled = true;
-//			submitOverLayStatus(isOverLayEnabled);
-//		}
-//	}
-//	public void submitOverLayStatus(boolean overLayStatus)
-//	{
-//		try {
-//			FileWriter writer = new FileWriter(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt"));
-//			writer.write(String.valueOf(overLayStatus));
-//			writer.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	private boolean getOverLayStatus()
-//	{
-//		String line = "";
-//		try {
-//			FileReader reader = new FileReader(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\OverlayStatus.txt"));
-//			BufferedReader br = new BufferedReader(reader);
-//			line = br.readLine();
-//			br.close();
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		return Boolean.valueOf(line);
-//	}
 	public void logout()
 	{
 		File cookiesFolder = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
