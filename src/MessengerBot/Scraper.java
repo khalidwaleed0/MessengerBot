@@ -105,7 +105,9 @@ public class Scraper {
 	    	{
 	    		importantSenders.add(senderName);
 	    		this.overlay.newChats.add(newMessage);
+	    		System.out.println("before");
 	    		this.overlay.senderPhotos.add(getSenderPhoto(newChatElement).getPath());
+	    		System.out.println("after");
 	    	}
 	    	else
 	    	{
@@ -126,7 +128,13 @@ public class Scraper {
 	}
 	private File getSenderPhoto(WebElement newChatElement)
 	{
-		File senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
+		File senderPhoto = null;
+		try {
+			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
+			return senderPhoto;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return senderPhoto;
 	}
 	private WebElement getNewChatElement()
@@ -146,7 +154,6 @@ public class Scraper {
 	private String getNewChatMessage(WebElement newChatElement)
 	{
     	String newMessage = newChatElement.findElement(By.cssSelector("span span")).getText();
-//    	newChatElement.click();
     	return newMessage;
 	}
 	
@@ -191,7 +198,6 @@ public class Scraper {
 	}
 	public void stopRecord()
 	{
-		System.out.println("first line stop record");
 		try {
 			driver.findElement(By.cssSelector("._3z55")).click();			
 		}catch(Exception e) {
@@ -199,13 +205,11 @@ public class Scraper {
 		}
 		WebDriverWait wait3 = new WebDriverWait(driver,1);
 		wait3.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._7mki._7mkj")));
-		System.out.println("second line stop record");
 		try{
 			driver.findElement(By.cssSelector("._7mki._7mkj")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("finished stopping record");
 	}
 	
 	public void quit()

@@ -69,12 +69,22 @@ public class Recorder extends Overlay implements Runnable{
 		{
 			isRecording = true;
 			Scraper.Singleton().makeRecord();
-			overlaySetup("Recording",2000);
+			try {
+				overlaySetup("Recording",2000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else
 		{
 			Scraper.Singleton().stopRecord();
-			overlaySetup("Sending Record",2000);
+			try {
+				overlaySetup("Sending Record",2000);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			isRecording = false;
 		}
 	}

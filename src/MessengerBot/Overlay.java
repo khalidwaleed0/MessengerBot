@@ -2,6 +2,7 @@ package MessengerBot;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +17,7 @@ public class Overlay implements Runnable {
 
 	public ArrayList<String> newChats = new ArrayList<String>();
 	public ArrayList<String> senderPhotos = new ArrayList<String>();
+	private boolean overLayFinished = false;
 	
 	@Override
 	public void run() {
@@ -23,10 +25,25 @@ public class Overlay implements Runnable {
 		{
 			try {
 				System.out.println("Overlay : "+newChats);
-				if((newChats.size() != 0) && !Recorder.isRecording)
+				System.out.println("Overlay Photos : "+senderPhotos);
+				if((senderPhotos.size() != 0) && !Recorder.isRecording)
 				{
-					overlaySetup(newChats.get(0),0);
+					EventQueue.invokeLater(new Runnable() {
+						public void run() {
+							try {
+								overlaySetup(newChats.get(0),0);
+								overLayFinished = true;
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					while(!overLayFinished)
+					{
+						Thread.sleep(1000);
+					}
 					removeSeenChat();
+					overLayFinished = false;
 				}
 				else
 					sleep(1000);
@@ -35,7 +52,7 @@ public class Overlay implements Runnable {
 			}
 		}
 	}
-	public void overlaySetup(String newChat, int sleepTime)
+	public void overlaySetup(String newChat, int sleepTime) throws Exception
 	{
 		JWindow window = new JWindow();
 		JLabel newChatLabel = new JLabel("");

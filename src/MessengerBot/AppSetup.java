@@ -26,11 +26,11 @@ public class AppSetup {
 	{
 		String launchFolder = System.getProperty("user.dir");
 		launchFolder = launchFolder.substring(launchFolder.length()-7);
-//		if(!launchFolder.equals("Desktop"))
-//		{
-//			JOptionPane.showMessageDialog(null, "Please move the program to the desktop and open it again", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
-//			System.exit(0);
-//		}
+		if(!launchFolder.equals("Desktop"))
+		{
+			JOptionPane.showMessageDialog(null, "Please move the program to the desktop and open it again", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
+		}
 		checkChromeInstallation();
 		if(!isChromeDriverInstalled())
 			extractChromeDriver();

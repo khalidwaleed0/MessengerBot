@@ -9,7 +9,6 @@ import org.openqa.selenium.SessionNotCreatedException;
 public class MainClass {
 	
 	public static void main(String[] args) {
-		
 		try {
 			AppUpdater.update();
 		} catch (IOException e1) {
@@ -26,11 +25,12 @@ public class MainClass {
 				Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe");
 				File oldChromeDriver = new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\chromedriver.exe");
 				oldChromeDriver.delete();
-				UpdateHelp uh = new UpdateHelp();
-				uh.setVisible(true);
+				showHelpGui();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+		}catch(IllegalStateException e2) {
+			showHelpGui();
 		}
 		if(Scraper.Singleton().isSessionCreated == true)
 		{
@@ -120,5 +120,18 @@ public class MainClass {
 				}
 			}
 		}
+	}
+	private static void showHelpGui()
+	{
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UpdateHelp uh = new UpdateHelp();
+					uh.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
