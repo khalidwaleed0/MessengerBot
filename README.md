@@ -10,3 +10,7 @@ Now you can play while being able to see only important messages and send record
 ![MessengerBot](https://user-images.githubusercontent.com/54943086/98012107-6009fd00-1e01-11eb-889a-0cf6fbe3a3f7.png)
 <br/>
 (Only messages after the word "important" will be shown).
+<br/>
+Credits :
+<br/>
+You can get the program icon for free from [here](https://www.flaticon.com/free-icon/android_915456)
