@@ -11,6 +11,6 @@ Now you can play while being able to see only important messages and send record
 <br/>
 (Only messages after the word "important" will be shown).
 <br/>
-Credits :
-<br/>
+<h2>Credits :</h2>
+
 You can get the program icon for free from [here](https://www.flaticon.com/free-icon/android_915456)
