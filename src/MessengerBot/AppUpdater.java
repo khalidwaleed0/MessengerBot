@@ -29,7 +29,7 @@ public class AppUpdater {
 	{
 		Document doc = Jsoup.connect("https://github.com/khalidwaleed0/MessengerBot/releases").get();
 		Element latestReleaseName = doc.selectFirst(".f1.flex-auto.min-width-0.text-normal a");
-		if(!latestReleaseName.text().equals("v1.1.0"))
+		if(!latestReleaseName.text().equals("v2.0"))
 		{
 			showUpdateWindow();
 			String whatsNew = doc.selectFirst(".markdown-body p").wholeText();
