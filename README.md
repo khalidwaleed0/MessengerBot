@@ -1,5 +1,5 @@
 # MessengerBot
-Auso Replier and Anti disturbance for Facebook Messenger.<br/>
+Auto Replier and Anti disturbance for Facebook Messenger.<br/>
 Now you can play while being able to see only important messages and send records too !<br/>
 <br/>
 ![MessengerBot](https://user-images.githubusercontent.com/54943086/98013569-35b93f00-1e03-11eb-8431-903218eefff3.png)
