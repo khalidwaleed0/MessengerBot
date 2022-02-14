@@ -28,13 +28,13 @@ public class AppUpdater {
 	protected static void update() throws IOException
 	{
 		Document doc = Jsoup.connect("https://github.com/khalidwaleed0/MessengerBot/releases").get();
-		Element latestReleaseName = doc.selectFirst(".f1.flex-auto.min-width-0.text-normal a");
-		if(!latestReleaseName.text().equals("v2.0"))
+		Element latestRelease = doc.selectFirst("h1 .Link--primary");
+		if(!latestRelease.text().equals("v2.0"))
 		{
 			showUpdateWindow();
 			String whatsNew = doc.selectFirst(".markdown-body p").wholeText();
-			String latestReleaseLink = "https://github.com/"+doc.selectFirst(".d-flex.flex-items-center.min-width-0").attr("href");
-			String fullSize = doc.selectFirst(".pl-2.text-gray.flex-shrink-0").text();
+			String latestReleaseLink = "https://github.com/"+doc.selectFirst(".Box.Box--condensed.mt-3 a").attr("href");
+			String fullSize = doc.selectFirst(".float-right.color-fg-muted").text();
 			File downloadedFile = new File(System.getProperty("user.home")+"\\Desktop\\MessengerBot(Latest).exe");
 			try (BufferedInputStream inputStream = new BufferedInputStream(new URL(latestReleaseLink).openStream());
 				FileOutputStream fileOS = new FileOutputStream(downloadedFile)) {
