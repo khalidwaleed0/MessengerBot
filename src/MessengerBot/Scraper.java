@@ -1,12 +1,11 @@
 package MessengerBot;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebElement;
+
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -37,7 +36,7 @@ public class Scraper {
 		ChromeOptions chromeOptions = createChromeOptions(chromePrefs);
 		driver = new ChromeDriver(chromeOptions);
 		driver.manage().window().setSize(new Dimension(1900,980));
-		driver.get("https://www.messenger.com/");
+		driver.navigate().to("https://www.messenger.com/");
 		isSessionCreated = true;
 	}
 	
@@ -53,8 +52,8 @@ public class Scraper {
 	{
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setExperimentalOption("prefs", chromePrefs);
-	    chromeOptions.addArguments("--headless");
-	    chromeOptions.addArguments("--disable-gpu");
+	    //chromeOptions.addArguments("--headless");
+	    //chromeOptions.addArguments("--disable-gpu");
 		chromeOptions.addArguments("user-data-dir="+System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
 		chromeOptions.addArguments("--mute-audio");
 	    chromeOptions.addArguments("use-fake-ui-for-media-stream");
@@ -91,11 +90,13 @@ public class Scraper {
 		try {
 	    	WebElement newChatElement = getNewChatElement();
 	    	String newMessage = getNewChatMessage(newChatElement);
-	    	if(isGroupChat(newMessage, newChatElement))
-	    		return;
-	    	String senderName = newChatElement.findElement(By.cssSelector("._1ht6._7st9")).getText();
+	    	//if(isGroupChat(newMessage, newChatElement))
+	    	//	return;
+	    	String senderName = newChatElement.findElement(By.cssSelector("span[dir=auto] span")).getText(); // should work
+	    	newChatElement.findElement(By.cssSelector("div[aria-label='Mark as read']")).click();            // click mark as read blue dot
 	    	newChatElement.click();
-	    	getTextFocus();
+			//JavascriptExecutor jse = (JavascriptExecutor)driver;
+			//jse.executeScript("document.querySelector('').setAttribute('value', 'new value for element')");
 	    	if(importantSenders.contains(senderName))
 	    	{
 	    		this.overlay.newChats.add(newMessage);
@@ -111,6 +112,7 @@ public class Scraper {
 	    	}
 	    	else
 	    	{
+				Thread.sleep(500);			// The Period between clicking the chat element and writing the message should be >= 500ms
 	    		writeMessage(AutoReplySettings.generalReply);
 	    		sendMessage();
 	    	}
@@ -130,7 +132,7 @@ public class Scraper {
 	{
 		File senderPhoto = null;
 		try {
-			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
+			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);//should work
 			return senderPhoto;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -139,8 +141,8 @@ public class Scraper {
 	}
 	private WebElement getNewChatElement()
 	{
-    	WebElement newChatElement = driver.findElement(By.cssSelector("ul[role=\"grid\"] li[aria-live=\"polite\""));
-    	return newChatElement;
+    	WebElement newChatElement = driver.findElement(By.xpath(".//div[@role='gridcell'][.//div[@aria-label='Mark as read']]"));
+    	return newChatElement;																	// should work
 	}
 	private boolean isGroupChat(String newMessage, WebElement newChatElement)
 	{
@@ -153,23 +155,18 @@ public class Scraper {
 	}
 	private String getNewChatMessage(WebElement newChatElement)
 	{
-    	String newMessage = newChatElement.findElement(By.cssSelector("span span")).getText();
+    	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText(); //should work
     	return newMessage;
-	}
-	
-	private void getTextFocus()
-	{
-		driver.findElement(By.cssSelector("div[data-offset-key]")).click();
 	}
 	
 	private void writeMessage(String message)
 	{
-		driver.findElement(By.cssSelector("div[data-offset-key]")).sendKeys(message);
+		driver.switchTo().activeElement().sendKeys(message);
 	}
 	
 	private void sendMessage()
 	{
-		driver.findElement(By.cssSelector("div[data-offset-key]")).sendKeys("\n");
+		driver.switchTo().activeElement().sendKeys("\n");
 	}
 	public void makeRecord()
 	{
@@ -177,8 +174,9 @@ public class Scraper {
 		System.out.println("first line make record");
 		driver.findElement(By.cssSelector("._7mki")).click();
 		
-		WebDriverWait wait1 = new WebDriverWait(driver,1);
-		wait1.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._30yy._7oam:nth-of-type(3)")));
+		WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(1));
+		//wait1.until(null)
+		//wait1.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._30yy._7oam:nth-of-type(3)")));
 		System.out.println("second line make record");
 		try {
 			driver.findElement(By.cssSelector("._30yy._7oam:nth-of-type(3)")).click();
@@ -187,7 +185,7 @@ public class Scraper {
 		}
 		
 		WebDriverWait wait2 = new WebDriverWait(driver,1);
-		wait2.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._3z55")));
+		//wait2.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._3z55")));
 		System.out.println("third line making record");
 		try {
 			driver.findElement(By.cssSelector("._3z55")).click();						
@@ -204,7 +202,7 @@ public class Scraper {
 			e.printStackTrace();
 		}
 		WebDriverWait wait3 = new WebDriverWait(driver,1);
-		wait3.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._7mki._7mkj")));
+		//wait3.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._7mki._7mkj")));
 		try{
 			driver.findElement(By.cssSelector("._7mki._7mkj")).click();
 		}catch(Exception e) {
