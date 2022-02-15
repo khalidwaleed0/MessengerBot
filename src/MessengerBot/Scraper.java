@@ -85,7 +85,10 @@ public class Scraper {
 	
 	public void scrap()
 	{
-		cancelCall();
+		try {
+			cancelCall();
+			look_away();
+		}catch (Exception e){}
 		try {
 	    	WebElement newChatElement = getNewChatElement();
 			if(isGroupChat(newChatElement))
@@ -120,13 +123,9 @@ public class Scraper {
 		}
 	}
 
-	private void cancelCall()
+	private void cancelCall() throws NoSuchElementException
 	{
-		try {
-			driver.findElement(By.cssSelector("._3quh._30yy._2u0._5ixy")).click();
-		}catch(Exception e) {
-//			e.printStackTrace();
-		}
+			driver.findElement(By.cssSelector("div[aria-label=Close]")).click();
 	}
 	private File getSenderPhoto(WebElement newChatElement)
 	{
@@ -165,41 +164,19 @@ public class Scraper {
 
 	public void makeRecord()
 	{
-		System.out.println(System.currentTimeMillis() - Recorder.x);
-		System.out.println("first line make record");
-		driver.findElement(By.cssSelector("._7mki")).click();
-		
-		WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(1));
-		//wait1.until(null)
-		//wait1.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._30yy._7oam:nth-of-type(3)")));
-		System.out.println("second line make record");
+		driver.findElement(By.cssSelector("div[aria-label='Open more actions']")).click();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
+		wait.until(webDriver -> ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role=dialog]")));
 		try {
-			driver.findElement(By.cssSelector("._30yy._7oam:nth-of-type(3)")).click();
+			driver.findElement(By.xpath(".//div[@role='dialog']//*[contains(text(), 'Send a voice clip')]")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		WebDriverWait wait2 = new WebDriverWait(driver,1);
-		//wait2.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._3z55")));
-		System.out.println("third line making record");
-		try {
-			driver.findElement(By.cssSelector("._3z55")).click();						
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println("finished making record");
 	}
 	public void stopRecord()
 	{
 		try {
-			driver.findElement(By.cssSelector("._3z55")).click();			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		WebDriverWait wait3 = new WebDriverWait(driver,1);
-		//wait3.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._7mki._7mkj")));
-		try{
-			driver.findElement(By.cssSelector("._7mki._7mkj")).click();
+			driver.findElement(By.cssSelector("div[aria-label='Press enter to send']")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
