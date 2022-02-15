@@ -88,35 +88,38 @@ public class Scraper {
 		cancelCall();
 		try {
 	    	WebElement newChatElement = getNewChatElement();
+			if(isGroupChat(newChatElement))
+				return;
 	    	String newMessage = getNewChatMessage(newChatElement);
-	    	if(isGroupChat(newMessage, newChatElement))
-	    		return;
 	    	String senderName = newChatElement.findElement(By.cssSelector("span[dir=auto] span")).getText();
 	    	newChatElement.findElement(By.cssSelector("div[aria-label='Mark as read']")).click();            // click mark as read blue dot
 	    	newChatElement.click();
-	    	if(importantSenders.contains(senderName))
-	    	{
-	    		this.overlay.newChats.add(newMessage);
-	    		this.overlay.senderPhotos.add(getSenderPhoto(newChatElement).getPath());
-	    	}
-	    	else if(newMessage.toLowerCase().contains("important"))
-	    	{
-	    		importantSenders.add(senderName);
-	    		this.overlay.newChats.add(newMessage);
-	    		System.out.println("before");
-	    		this.overlay.senderPhotos.add(getSenderPhoto(newChatElement).getPath());
-	    		System.out.println("after");
-	    	}
-	    	else
-	    	{
-				Thread.sleep(500);			// The Period between clicking the chat element and writing the message should be >= 500ms
-	    		sendMessage(AutoReplySettings.generalReply);
-	    	}
+	    	respondToMessage(senderName,newMessage,newChatElement);
 			look_away();
 	    }catch(Exception e) {
-	    	e.printStackTrace();
+
 	    }
 	}
+
+	private void respondToMessage(String senderName, String newMessage, WebElement newChatElement) throws InterruptedException {
+		if(importantSenders.contains(senderName))
+		{
+			this.overlay.newChats.add(newMessage);
+			this.overlay.senderPhotos.add(getSenderPhoto(newChatElement).getPath());
+		}
+		else if(newMessage.toLowerCase().contains("important"))
+		{
+			importantSenders.add(senderName);
+			this.overlay.newChats.add(newMessage);
+			this.overlay.senderPhotos.add(getSenderPhoto(newChatElement).getPath());
+		}
+		else
+		{	// The Period between clicking the chat element and writing the message should be >= 500ms
+			Thread.sleep(500);
+			sendMessage(AutoReplySettings.generalReply);
+		}
+	}
+
 	private void cancelCall()
 	{
 		try {
@@ -129,31 +132,24 @@ public class Scraper {
 	{
 		File senderPhoto = null;
 		try {
-			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);//should work
-			return senderPhoto;
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
+		}catch(Exception e) {}
 		return senderPhoto;
 	}
 	private WebElement getNewChatElement()
 	{
     	WebElement newChatElement = driver.findElement(By.xpath(".//div[@role='gridcell'][.//div[@aria-label='Mark as read']]"));
-    	return newChatElement;																	// should work
+    	return newChatElement;
 	}
-	private boolean isGroupChat(String newMessage, WebElement newChatElement)
+	private boolean isGroupChat(WebElement newChatElement)
 	{
 		String link = newChatElement.findElement(By.cssSelector("a")).getAttribute("href");
 		link = link.replaceAll("\\D","");
-		System.out.println(link);
-		if(link.length() >= 16)
-			return true;
-		else
-			return false;
+		return (link.length() >= 16);
 	}
 	private String getNewChatMessage(WebElement newChatElement)
 	{
-    	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText(); //should work
+    	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText();
     	return newMessage;
 	}
 	private void look_away()
