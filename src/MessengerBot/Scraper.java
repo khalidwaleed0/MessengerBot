@@ -52,8 +52,7 @@ public class Scraper {
 	{
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setExperimentalOption("prefs", chromePrefs);
-	    //chromeOptions.addArguments("--headless");
-	    //chromeOptions.addArguments("--disable-gpu");
+	    chromeOptions.addArguments("--headless");
 		chromeOptions.addArguments("user-data-dir="+System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
 		chromeOptions.addArguments("--mute-audio");
 	    chromeOptions.addArguments("use-fake-ui-for-media-stream");
@@ -90,13 +89,11 @@ public class Scraper {
 		try {
 	    	WebElement newChatElement = getNewChatElement();
 	    	String newMessage = getNewChatMessage(newChatElement);
-	    	//if(isGroupChat(newMessage, newChatElement))
-	    	//	return;
-	    	String senderName = newChatElement.findElement(By.cssSelector("span[dir=auto] span")).getText(); // should work
+	    	if(isGroupChat(newMessage, newChatElement))
+	    		return;
+	    	String senderName = newChatElement.findElement(By.cssSelector("span[dir=auto] span")).getText();
 	    	newChatElement.findElement(By.cssSelector("div[aria-label='Mark as read']")).click();            // click mark as read blue dot
 	    	newChatElement.click();
-			//JavascriptExecutor jse = (JavascriptExecutor)driver;
-			//jse.executeScript("document.querySelector('').setAttribute('value', 'new value for element')");
 	    	if(importantSenders.contains(senderName))
 	    	{
 	    		this.overlay.newChats.add(newMessage);
@@ -113,9 +110,9 @@ public class Scraper {
 	    	else
 	    	{
 				Thread.sleep(500);			// The Period between clicking the chat element and writing the message should be >= 500ms
-	    		writeMessage(AutoReplySettings.generalReply);
-	    		sendMessage();
+	    		sendMessage(AutoReplySettings.generalReply);
 	    	}
+			look_away();
 	    }catch(Exception e) {
 	    	e.printStackTrace();
 	    }
@@ -146,28 +143,30 @@ public class Scraper {
 	}
 	private boolean isGroupChat(String newMessage, WebElement newChatElement)
 	{
-		String x = newChatElement.findElements(By.cssSelector("span")).get(2).getText();
-		System.out.println("X = "+x);
-		if(newMessage.equals(x))
-			return false;
-		else
+		String link = newChatElement.findElement(By.cssSelector("a")).getAttribute("href");
+		link = link.replaceAll("\\D","");
+		System.out.println(link);
+		if(link.length() >= 16)
 			return true;
+		else
+			return false;
 	}
 	private String getNewChatMessage(WebElement newChatElement)
 	{
     	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText(); //should work
     	return newMessage;
 	}
-	
-	private void writeMessage(String message)
+	private void look_away()
 	{
-		driver.switchTo().activeElement().sendKeys(message);
+		driver.navigate().to("https://www.messenger.com/t/107105541890654");
+		// Gets away from the current chat by going to messengerbot chat.
+		// This is useful as it guarantees that no message is seen by mistake.
 	}
-	
-	private void sendMessage()
+	private void sendMessage(String message)
 	{
-		driver.switchTo().activeElement().sendKeys("\n");
+		driver.switchTo().activeElement().sendKeys(message+"\n");
 	}
+
 	public void makeRecord()
 	{
 		System.out.println(System.currentTimeMillis() - Recorder.x);
