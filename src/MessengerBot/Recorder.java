@@ -9,7 +9,6 @@ import lc.kra.system.mouse.event.GlobalMouseEvent;
 
 public class Recorder extends Overlay implements Runnable{
 	public static boolean isRecording = false;
-	public static long x = 1;
 	private String recordedKey;
 	@Override
 	public void run() {

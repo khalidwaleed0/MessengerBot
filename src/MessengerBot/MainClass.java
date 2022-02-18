@@ -32,7 +32,7 @@ public class MainClass {
 		}catch(IllegalStateException e2) {
 			showHelpGui();
 		}
-		if(Scraper.Singleton().isSessionCreated == true)
+		if(Scraper.Singleton().isSessionCreated)
 		{
 			showLoginGui();
 			showMainGui();

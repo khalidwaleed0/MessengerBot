@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Scraper {
 	private ChromeDriver driver;
 	private static Scraper sc = null;
-	private static ArrayList<String> importantSenders = new ArrayList<String>();
+	private static ArrayList<String> importantSenders = new ArrayList<>();
 	private Overlay overlay;
 	public boolean isSessionCreated = false;
 	public static Scraper Singleton() 
@@ -42,7 +42,7 @@ public class Scraper {
 	
 	private HashMap<String, Object> createChromePrefs()
 	{
-		HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+		HashMap<String, Object> chromePrefs = new HashMap<>();
 		chromePrefs.put("profile.default_content_settings.popups", 0);
 		chromePrefs.put("profile.default_content_setting_values.notifications", 2);
 		return chromePrefs;
@@ -67,8 +67,6 @@ public class Scraper {
 		WebElement passwordElement = driver.findElement(By.cssSelector("#pass"));
 		passwordElement.click();
 		passwordElement.sendKeys(password);
-		email = null;
-		password = null;
 		driver.findElement(By.cssSelector(".uiInputLabelInput")).click();
 		driver.findElement(By.cssSelector("#loginbutton")).click();
 	}
@@ -88,7 +86,7 @@ public class Scraper {
 		try {
 			cancelCall();
 			look_away();
-		}catch (Exception e){}
+		}catch (Exception ignored){}
 		try {
 	    	WebElement newChatElement = getNewChatElement();
 			if(isGroupChat(newChatElement))
@@ -99,9 +97,7 @@ public class Scraper {
 	    	newChatElement.click();
 	    	respondToMessage(senderName,newMessage,newChatElement);
 			look_away();
-	    }catch(Exception e) {
-
-	    }
+	    }catch(Exception ignored) {}
 	}
 
 	private void respondToMessage(String senderName, String newMessage, WebElement newChatElement) throws InterruptedException {
@@ -132,13 +128,12 @@ public class Scraper {
 		File senderPhoto = null;
 		try {
 			senderPhoto = newChatElement.findElement(By.cssSelector("img")).getScreenshotAs(OutputType.FILE);
-		}catch(Exception e) {}
+		}catch(Exception ignored) {}
 		return senderPhoto;
 	}
 	private WebElement getNewChatElement()
 	{
-    	WebElement newChatElement = driver.findElement(By.xpath(".//div[@role='gridcell'][.//div[@aria-label='Mark as read']]"));
-    	return newChatElement;
+		return driver.findElement(By.xpath(".//div[@role='gridcell'][.//div[@aria-label='Mark as read']]"));
 	}
 	private boolean isGroupChat(WebElement newChatElement)
 	{
@@ -148,8 +143,7 @@ public class Scraper {
 	}
 	private String getNewChatMessage(WebElement newChatElement)
 	{
-    	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText();
-    	return newMessage;
+		return newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText();
 	}
 	public void clickFirstChat(){driver.findElement(By.cssSelector("div[role=gridcell]")).click();}
 	private void look_away()
