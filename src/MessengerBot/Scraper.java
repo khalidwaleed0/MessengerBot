@@ -151,6 +151,7 @@ public class Scraper {
     	String newMessage = newChatElement.findElements(By.cssSelector("span[dir=auto] span")).get(1).getText();
     	return newMessage;
 	}
+	public void clickFirstChat(){driver.findElement(By.cssSelector("div[role=gridcell]")).click();}
 	private void look_away()
 	{
 		driver.navigate().to("https://www.messenger.com/t/107105541890654");
