@@ -41,7 +41,7 @@ public class Recorder extends Overlay implements Runnable{
 			@Override 
 			public void mousePressed(GlobalMouseEvent event)  {
 				System.out.println(event);
-				if (event.getButton()==Integer.valueOf(recordedKey)) {
+				if (event.getButton()==Integer.parseInt(recordedKey)) {
 					System.out.println(recordedKey+" Pressed !");
 					sendRecord();
 				}
@@ -56,7 +56,7 @@ public class Recorder extends Overlay implements Runnable{
 			@Override 
 			public void keyPressed(GlobalKeyEvent event) {
 				System.out.println(event);
-				if (event.getVirtualKeyCode() == Integer.valueOf(recordedKey)) {
+				if (event.getVirtualKeyCode() == Integer.parseInt(recordedKey)) {
 					System.out.println("Record started");
 					sendRecord();
 				}
@@ -68,11 +68,11 @@ public class Recorder extends Overlay implements Runnable{
 		if(!isRecording)
 		{
 			isRecording = true;
+			Scraper.Singleton().clickFirstChat();	//This is a must because MessengerBot always goes to its FB page after seeing any message
 			Scraper.Singleton().makeRecord();
 			try {
 				overlaySetup("Recording",2000);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -82,7 +82,6 @@ public class Recorder extends Overlay implements Runnable{
 			try {
 				overlaySetup("Sending Record",2000);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			isRecording = false;
