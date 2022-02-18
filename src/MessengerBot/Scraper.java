@@ -165,10 +165,14 @@ public class Scraper {
 	public void makeRecord()
 	{
 		driver.findElement(By.cssSelector("div[aria-label='Open more actions']")).click();
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
-		wait.until(webDriver -> ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role=dialog]")));
+		//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
+
+		//wait.until(webDriver -> ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role=dialog]")));
 		try {
+			Thread.sleep(1000);
 			driver.findElement(By.xpath(".//div[@role='dialog']//*[contains(text(), 'Send a voice clip')]")).click();
+			Thread.sleep(500);
+			driver.findElement(By.cssSelector("div[aria-label=OK]")).click();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
