@@ -11,17 +11,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class LoginGui extends JFrame {
 	private static final long serialVersionUID = -251690788837449454L;
 	public static boolean finished = false;
-	private JPanel contentPane;
-	private JTextField emailField;
-	private JPasswordField passwordField;
-	private JLabel passwordLabel;
-	private JLabel loginStatusLabel = new JLabel("");
+	private final JPanel contentPane;
+	private final JTextField emailField;
+	private final JPasswordField passwordField;
+	private final JLabel passwordLabel;
+	private final JLabel loginStatusLabel = new JLabel("");
 	
 	public LoginGui() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
@@ -51,11 +49,7 @@ public class LoginGui extends JFrame {
 		contentPane.add(imgLabel);
 		
 		emailField = new JTextField();
-		emailField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				login();
-			}
-		});
+		emailField.addActionListener(e -> login());
 		emailField.setBounds(125, 118, 188, 20);
 		contentPane.add(emailField);
 		emailField.setColumns(10);
@@ -78,11 +72,7 @@ public class LoginGui extends JFrame {
 		
 		loginStatusLabel.setBounds(10, 218, 155, 14);
 		contentPane.add(loginStatusLabel);
-		signButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				login();
-			}
-		});
+		signButton.addActionListener(e -> login());
 	}
 	private void login()
 	{

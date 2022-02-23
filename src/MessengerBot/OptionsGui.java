@@ -11,10 +11,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -63,34 +61,28 @@ public class OptionsGui extends JDialog {
         createMouseListener();
         createKeyboardListener();
 
-        btnListen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (!isRecording) {
-                    recordedKeyField.setText("Listening..");
-                    requestFocus();
-                    addMouseListener(ma);
-                    addKeyListener(kl);
-                    isRecording = true;
-                    btnListen.setText("stop listening");
-                } else {
-                    removeMouseListener(ma);
-                    removeKeyListener(kl);
-                    isRecording = false;
-                    btnListen.setText("Listen");
-                    if (recordedKeyField.getText().equals("Listening.."))
-                        recordedKeyField.setText("");
-                    AppSetup.Singleton().submitRecordedKey(recordedKey);
-                }
+        btnListen.addActionListener(e -> {
+            if (!isRecording) {
+                recordedKeyField.setText("Listening..");
+                requestFocus();
+                addMouseListener(ma);
+                addKeyListener(kl);
+                isRecording = true;
+                btnListen.setText("stop listening");
+            } else {
+                removeMouseListener(ma);
+                removeKeyListener(kl);
+                isRecording = false;
+                btnListen.setText("Listen");
+                if (recordedKeyField.getText().equals("Listening.."))
+                    recordedKeyField.setText("");
+                AppSetup.Singleton().submitRecordedKey(recordedKey);
             }
         });
 
 
         JCheckBox recordCheckBox = new JCheckBox("Enable Record Button (works even if you are in a game)");
-        recordCheckBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                showRecordSettings(recordCheckBox.isSelected());
-            }
-        });
+        recordCheckBox.addActionListener(e -> showRecordSettings(recordCheckBox.isSelected()));
         if (AppSetup.Singleton().isRecordEnabled()) {
             recordCheckBox.setSelected(true);
             showRecordSettings(true);

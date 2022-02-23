@@ -12,11 +12,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -26,7 +24,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 public class MainGui extends JFrame {
     private static final long serialVersionUID = 5937481215987949886L;
@@ -48,23 +45,17 @@ public class MainGui extends JFrame {
         menuBar.add(aboutMenu);
 
         JMenuItem githugbMenuItem = new JMenuItem("Github Project");
-        githugbMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://github.com/khalidwaleed0/MessengerBot"));
-                } catch (IOException | URISyntaxException e1) {
-                    e1.printStackTrace();
-                }
+        githugbMenuItem.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/khalidwaleed0/MessengerBot"));
+            } catch (IOException | URISyntaxException e1) {
+                e1.printStackTrace();
             }
         });
         aboutMenu.add(githugbMenuItem);
 
         JMenuItem contactMenuItem = new JMenuItem("Contact me");
-        contactMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Feel free to contact me\nEmail : khalidwaleed0@outlook.com");
-            }
-        });
+        contactMenuItem.addActionListener(e -> JOptionPane.showMessageDialog(null, "Feel free to contact me\nEmail : khalidwaleed0@outlook.com"));
         contactMenuItem.setHorizontalAlignment(SwingConstants.LEFT);
         aboutMenu.add(contactMenuItem);
 
@@ -72,12 +63,10 @@ public class MainGui extends JFrame {
         menuBar.add(uninstallMenu);
 
         JMenuItem uninstallMenuItem = new JMenuItem("Uninstall");
-        uninstallMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AppSetup.Singleton().uninstall();
-                dispose();
-                System.exit(0);
-            }
+        uninstallMenuItem.addActionListener(e -> {
+            AppSetup.Singleton().uninstall();
+            dispose();
+            System.exit(0);
         });
         uninstallMenu.add(uninstallMenuItem);
         contentPane = new JPanel();
@@ -102,12 +91,10 @@ public class MainGui extends JFrame {
         btnApply.setBounds(151, 142, 120, 23);
         contentPane.add(btnApply);
 
-        btnApply.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AutoReplySettings.Singleton().submitBasicReplySettings(generalReplyText.getText());
-                JOptionPane.showMessageDialog(null, "Applied Changes Successfully", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
-                btnApply.setVisible(false);
-            }
+        btnApply.addActionListener(e -> {
+            AutoReplySettings.Singleton().submitBasicReplySettings(generalReplyText.getText());
+            JOptionPane.showMessageDialog(null, "Applied Changes Successfully", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
+            btnApply.setVisible(false);
         });
 
         generalReplyText.addKeyListener(new KeyAdapter() {
@@ -118,21 +105,17 @@ public class MainGui extends JFrame {
         });
 
         JButton btnStart = new JButton("start");
-        btnStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                finished = true;
-                dispose();
-            }
+        btnStart.addActionListener(e -> {
+            finished = true;
+            dispose();
         });
         btnStart.setBounds(10, 142, 89, 23);
         contentPane.add(btnStart);
 
         JButton btnOptions = new JButton("Options");
-        btnOptions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                OptionsGui options = new OptionsGui();
-                options.setVisible(true);
-            }
+        btnOptions.addActionListener(e -> {
+            OptionsGui options = new OptionsGui();
+            options.setVisible(true);
         });
         btnOptions.setBounds(316, 142, 120, 24);
         contentPane.add(btnOptions);

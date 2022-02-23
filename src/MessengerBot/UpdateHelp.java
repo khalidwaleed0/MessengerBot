@@ -10,17 +10,15 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
 public class UpdateHelp extends JFrame {
 	private static final long serialVersionUID = -4052029979870716607L;
-	private JPanel contentPane;
+	private final JPanel contentPane;
 
 	public UpdateHelp() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UpdateHelp.class.getResource("/importedFiles/robot64p.png")));
@@ -40,13 +38,11 @@ public class UpdateHelp extends JFrame {
 		contentPane.add(firstStep);
 		
 		JButton downloadBtn = new JButton("download");
-		downloadBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Desktop.getDesktop().browse(new URI("https://chromedriver.chromium.org/"));
-				} catch (IOException | URISyntaxException e1) {
-					e1.printStackTrace();
-				}
+		downloadBtn.addActionListener(e -> {
+			try {
+				Desktop.getDesktop().browse(new URI("https://chromedriver.chromium.org/"));
+			} catch (IOException | URISyntaxException e1) {
+				e1.printStackTrace();
 			}
 		});
 		downloadBtn.setBounds(315, 7, 105, 23);
@@ -57,13 +53,11 @@ public class UpdateHelp extends JFrame {
 		contentPane.add(secondStep);
 		
 		JButton folderBtn = new JButton("open folder");
-		folderBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					Desktop.getDesktop().open(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\"));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+		folderBtn.addActionListener(e -> {
+			try {
+				Desktop.getDesktop().open(new File(System.getProperty("user.home")+"\\AppData\\Local\\Google\\Chrome\\MessengerBot\\"));
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
 		});
 		folderBtn.setBounds(315, 63, 105, 23);

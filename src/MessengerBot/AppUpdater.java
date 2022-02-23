@@ -34,34 +34,38 @@ public class AppUpdater {
             String whatsNew = doc.selectFirst(".markdown-body p").wholeText();
             String latestReleaseLink = "https://github.com/" + doc.selectFirst(".Box.Box--condensed.mt-3 a").attr("href");
             String fullSize = doc.selectFirst(".float-right.color-fg-muted").text();
-            File downloadedFile = new File(System.getProperty("user.home") + "\\Desktop\\MessengerBot(Latest).exe");
-            try (BufferedInputStream inputStream = new BufferedInputStream(new URL(latestReleaseLink).openStream());
-                 FileOutputStream fileOS = new FileOutputStream(downloadedFile)) {
-                byte[] data = new byte[1024];
-                int byteContent;
-                while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-                    fileOS.write(data, 0, byteContent);
-                    lblDownloadInfo.setVisible(false);
-                    lblDownloadInfo.setText("Downloaded : " + String.format("%.2f", (float) downloadedFile.length() / (1024 * 1024)) + " MB of " + fullSize);
-                    lblDownloadInfo.setVisible(true);
-                }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error while downloading latest Version\nPlease download it manually");
-                try {
-                    Desktop.getDesktop().browse(new URI("https://github.com/khalidwaleed0/MessengerBot/releases"));
-                } catch (URISyntaxException ignored) {
-                }
-            }
-            lblDownloadInfo.setText("Download Completed");
-            dialog.dispose();
+            downloadAndShowProgress(latestReleaseLink,fullSize);
             JOptionPane.showMessageDialog(null, whatsNew, "What's New", JOptionPane.INFORMATION_MESSAGE);
             try {
                 Scraper.Singleton().quit();
-                Desktop.getDesktop().open(batch());
+                Desktop.getDesktop().open(createBatch());
             } catch (IOException ignored) {
             }
             System.exit(0);
         }
+    }
+
+    private static void downloadAndShowProgress(String latestReleaseLink, String fullSize) {
+        File downloadedFile = new File(System.getProperty("user.home") + "\\Desktop\\MessengerBot(Latest).exe");
+        try (BufferedInputStream inputStream = new BufferedInputStream(new URL(latestReleaseLink).openStream());
+             FileOutputStream fileOS = new FileOutputStream(downloadedFile)) {
+            byte[] data = new byte[1024];
+            int byteContent;
+            while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                fileOS.write(data, 0, byteContent);
+                lblDownloadInfo.setVisible(false);
+                lblDownloadInfo.setText("Downloaded : " + String.format("%.2f", (float) downloadedFile.length() / (1024 * 1024)) + " MB of " + fullSize);
+                lblDownloadInfo.setVisible(true);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error while downloading latest Version\nPlease download it manually");
+            try {
+                Desktop.getDesktop().browse(new URI("https://github.com/khalidwaleed0/MessengerBot/releases"));
+            } catch (URISyntaxException | IOException ignored) {
+            }
+        }
+        lblDownloadInfo.setText("Download Completed");
+        dialog.dispose();
     }
 
     private static void showUpdateWindow() {
@@ -88,7 +92,7 @@ public class AppUpdater {
         contentPanel.add(lblTheNewVersion);
     }
 
-    private static File batch() {
+    private static File createBatch() {
         File batch = new File(System.getProperty("user.home") + "\\Desktop\\updater.bat");
         try {
             PrintWriter writer = new PrintWriter(batch);
