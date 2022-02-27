@@ -1,6 +1,7 @@
 package MessengerBot;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
@@ -13,7 +14,6 @@ public class LoginGui extends JFrame {
 	private final JPasswordField passwordField;
 	private final JLabel passwordLabel;
 	private final JButton signButton;
-	private final JLabel loginStatusLabel = new JLabel("");
 	
 	public LoginGui() {
 		UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
@@ -27,12 +27,14 @@ public class LoginGui extends JFrame {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit ?", "MessengerBot", JOptionPane.QUESTION_MESSAGE);
+		    public void windowClosing(WindowEvent windowEvent) {
+		        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit ?"
+						, "MessengerBot",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		        if(response == JOptionPane.YES_OPTION)
 		        {
 		        	Scraper.Singleton().quit();
-		        	dispose();
+		        	AppSetup.Singleton().deleteCookies();
+					dispose();
 		        	System.exit(0);
 		        }
 		    }
@@ -65,9 +67,7 @@ public class LoginGui extends JFrame {
 		signButton = new JButton("sign in");
 		signButton.setBounds(175, 209, 78, 23);
 		contentPane.add(signButton);
-		
-		loginStatusLabel.setBounds(10, 218, 155, 14);
-		contentPane.add(loginStatusLabel);
+
 		signButton.addActionListener(e -> login());
 	}
 	private void login()
@@ -75,7 +75,6 @@ public class LoginGui extends JFrame {
 		String email = emailField.getText();
 		char[] password = passwordField.getPassword();
 		LoginWorker worker = new LoginWorker(email, new String(password));
-		loginStatusLabel.setText("Signing in..");
 		worker.execute();
 		password = null;
 	}
@@ -89,6 +88,7 @@ public class LoginGui extends JFrame {
 		@Override
 		protected Void doInBackground() throws Exception {
 			signButton.setEnabled(false);
+			signButton.setText("Signing in..");
 			Scraper.Singleton().login(email, password);
 			password = null;
 			if(Scraper.Singleton().isLoggedInSuccessfully())
@@ -102,7 +102,7 @@ public class LoginGui extends JFrame {
 				JOptionPane.showMessageDialog(null, "Wrong email or password", "MessengerBot", 
 						JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/importedFiles/robot64p.png")));
 			}
-			loginStatusLabel.setText("");
+			signButton.setText("Sign in");
 			signButton.setEnabled(true);
 			return null;
 		}
