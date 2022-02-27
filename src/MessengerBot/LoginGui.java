@@ -88,7 +88,7 @@ public class LoginGui extends JFrame {
 		@Override
 		protected Void doInBackground() throws Exception {
 			signButton.setEnabled(false);
-			signButton.setText("Signing in..");
+			signButton.setText("signing..");
 			Scraper.Singleton().login(email, password);
 			password = null;
 			if(Scraper.Singleton().isLoggedInSuccessfully())
@@ -102,7 +102,7 @@ public class LoginGui extends JFrame {
 				JOptionPane.showMessageDialog(null, "Wrong email or password", "MessengerBot", 
 						JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/importedFiles/robot64p.png")));
 			}
-			signButton.setText("Sign in");
+			signButton.setText("sign in");
 			signButton.setEnabled(true);
 			return null;
 		}
