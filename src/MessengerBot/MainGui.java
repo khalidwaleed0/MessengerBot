@@ -118,6 +118,7 @@ public class MainGui extends JFrame {
                 if (response == JOptionPane.YES_OPTION) {
                     setVisible(false);
                     dispose();
+                    AppSetup.Singleton().deleteCookies();
                     Scraper.Singleton().quit();
                     System.exit(0);
                 }
