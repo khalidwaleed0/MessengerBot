@@ -2,24 +2,15 @@ package MessengerBot;
 
 import java.awt.Color;
 import java.awt.Desktop;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JMenu;
-import javax.swing.SwingConstants;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -31,6 +22,7 @@ public class MainGui extends JFrame {
     private final JPanel contentPane;
 
     public MainGui() {
+        UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
         setTitle("MessengerBot");
         Border border = BorderFactory.createLineBorder(Color.decode("#acacac"));
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));

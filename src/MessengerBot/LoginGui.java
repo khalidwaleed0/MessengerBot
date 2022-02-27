@@ -1,16 +1,9 @@
 package MessengerBot;
 
-import java.awt.Toolkit;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
+import javax.swing.plaf.ColorUIResource;
 
 public class LoginGui extends JFrame {
 	private static final long serialVersionUID = -251690788837449454L;
@@ -22,6 +15,7 @@ public class LoginGui extends JFrame {
 	private final JLabel loginStatusLabel = new JLabel("");
 	
 	public LoginGui() {
+		UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
 		setBounds(100, 100, 450, 282);
 		setLocationRelativeTo(null);

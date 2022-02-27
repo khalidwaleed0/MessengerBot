@@ -28,7 +28,7 @@ public class OptionsGui extends JDialog {
     private boolean isRecording = false;
 
     public OptionsGui() {
-
+        UIManager.put("Button.focus", new ColorUIResource(new Color(0, 0, 0, 0)));
         setTitle("Options");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/importedFiles/robot64p.png")));
         setFocusable(true);
