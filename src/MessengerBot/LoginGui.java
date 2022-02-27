@@ -12,6 +12,7 @@ public class LoginGui extends JFrame {
 	private final JTextField emailField;
 	private final JPasswordField passwordField;
 	private final JLabel passwordLabel;
+	private final JButton signButton;
 	private final JLabel loginStatusLabel = new JLabel("");
 	
 	public LoginGui() {
@@ -49,6 +50,7 @@ public class LoginGui extends JFrame {
 		emailField.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		passwordField.addActionListener(e -> login());
 		passwordField.setBounds(125, 164, 188, 20);
 		contentPane.add(passwordField);
 		
@@ -59,8 +61,8 @@ public class LoginGui extends JFrame {
 		passwordLabel = new JLabel("password");
 		passwordLabel.setBounds(23, 167, 69, 14);
 		contentPane.add(passwordLabel);
-		
-		JButton signButton = new JButton("sign in");
+
+		signButton = new JButton("sign in");
 		signButton.setBounds(175, 209, 78, 23);
 		contentPane.add(signButton);
 		
@@ -86,6 +88,7 @@ public class LoginGui extends JFrame {
 		}
 		@Override
 		protected Void doInBackground() throws Exception {
+			signButton.setEnabled(false);
 			Scraper.Singleton().login(email, password);
 			password = null;
 			if(Scraper.Singleton().isLoggedInSuccessfully())
@@ -100,6 +103,7 @@ public class LoginGui extends JFrame {
 						JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource("/importedFiles/robot64p.png")));
 			}
 			loginStatusLabel.setText("");
+			signButton.setEnabled(true);
 			return null;
 		}
 	}
