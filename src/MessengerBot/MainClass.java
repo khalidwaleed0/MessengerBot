@@ -56,7 +56,7 @@ public class MainClass {
             });
             while (!LoginGui.finished) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -75,7 +75,7 @@ public class MainClass {
         });
         while (!MainGui.finished) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
