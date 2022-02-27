@@ -1,12 +1,15 @@
 package MessengerBot;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Scraper {
     private static final ArrayList<String> importantSenders = new ArrayList<>();
@@ -34,6 +37,7 @@ public class Scraper {
         ChromeOptions chromeOptions = createChromeOptions(chromePrefs);
         driver = new ChromeDriver(chromeOptions);
         driver.manage().window().setSize(new Dimension(1900, 980));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         lookAway();
         isSessionCreated = true;
     }
@@ -48,7 +52,7 @@ public class Scraper {
     private ChromeOptions createChromeOptions(HashMap<String, Object> chromePrefs) {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setExperimentalOption("prefs", chromePrefs);
-        //chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("user-data-dir=" + System.getProperty("user.home") + "\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
         chromeOptions.addArguments("--mute-audio");
         chromeOptions.addArguments("use-fake-ui-for-media-stream");
@@ -64,7 +68,6 @@ public class Scraper {
         passwordTextBox.click();
         passwordTextBox.sendKeys(password);
         driver.findElement(By.cssSelector(".uiInputLabelInput")).click(); //Keep me signed in checkbox
-        //Maybe we need here thread.sleep 200ms or something
         driver.findElement(By.cssSelector("#loginbutton")).click();
     }
 
@@ -102,8 +105,8 @@ public class Scraper {
         else if (newMessage.toLowerCase().contains("important")) {
             importantSenders.add(senderName);
             appendToDisplayedChats();
-        } else {    // The Period between clicking the chat element and writing the message should be >= 500ms
-            Thread.sleep(500);
+        } else {
+            waitForChatLoad();
             sendMessage(AutoReplySettings.generalReply);
         }
     }
@@ -152,7 +155,10 @@ public class Scraper {
     public void clickFirstChat() { //opens the first chat which is not a messengerbot chat
         driver.findElement(By.cssSelector("div[role=gridcell] a:not(a[href='/t/107105541890654/'])")).click();
     }
-
+    private void waitForChatLoad(){
+        new WebDriverWait(driver,Duration.ofSeconds(30)).until(driver -> driver.findElement(
+                By.cssSelector("div[role=gridcell] a[aria-current=page]:not(a[href='/t/107105541890654/'])")));
+    }
     private void lookAway() {
         try{
             WebElement messengerBotChat = driver.findElement(By.cssSelector("div[role=gridcell] a[href='/t/107105541890654/']"));
@@ -170,17 +176,10 @@ public class Scraper {
 
     public void startRecord() {
         Scraper.Singleton().clickFirstChat();    //This is a must because MessengerBot always goes to its FB page after seeing any message
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+        waitForChatLoad();
         driver.findElement(By.cssSelector("div[aria-label='Open more actions']")).click();
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
-
-        //wait.until(webDriver -> ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role=dialog]")));
         try {
-            Thread.sleep(200);
             driver.findElement(By.xpath(".//div[@role='dialog']//*[contains(text(), 'Send a voice clip')]")).click();
-            Thread.sleep(100);
             driver.findElement(By.cssSelector("div[aria-label=OK]")).click();
         } catch (Exception e) {
             e.printStackTrace();
