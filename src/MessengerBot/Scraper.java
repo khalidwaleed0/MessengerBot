@@ -34,7 +34,7 @@ public class Scraper {
         ChromeOptions chromeOptions = createChromeOptions(chromePrefs);
         driver = new ChromeDriver(chromeOptions);
         driver.manage().window().setSize(new Dimension(1900, 980));
-        driver.navigate().to("https://www.messenger.com/");
+        lookAway();
         isSessionCreated = true;
     }
 
@@ -48,7 +48,7 @@ public class Scraper {
     private ChromeOptions createChromeOptions(HashMap<String, Object> chromePrefs) {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setExperimentalOption("prefs", chromePrefs);
-        chromeOptions.addArguments("--headless");
+        //chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("user-data-dir=" + System.getProperty("user.home") + "\\AppData\\Local\\Google\\Chrome\\MessengerBot\\Cookies");
         chromeOptions.addArguments("--mute-audio");
         chromeOptions.addArguments("use-fake-ui-for-media-stream");
@@ -149,12 +149,17 @@ public class Scraper {
         newChatElement.click();
     }
 
-    public void clickFirstChat() {
-        driver.findElement(By.cssSelector("div[role=gridcell]")).click();
+    public void clickFirstChat() { //opens the first chat which is not a messengerbot chat
+        driver.findElement(By.cssSelector("div[role=gridcell] a:not(a[href='/t/107105541890654/'])")).click();
     }
 
     private void lookAway() {
-        driver.navigate().to("https://www.messenger.com/t/107105541890654");
+        try{
+            WebElement messengerBotChat = driver.findElement(By.cssSelector("div[role=gridcell] a[href='/t/107105541890654/']"));
+            messengerBotChat.click();
+        }catch (Exception e){
+            driver.navigate().to("https://www.messenger.com/t/107105541890654");
+        }
         // Gets away from the current chat by going to messengerbot chat.
         // This is useful as it guarantees that no message is seen by mistake.
     }
@@ -165,14 +170,17 @@ public class Scraper {
 
     public void startRecord() {
         Scraper.Singleton().clickFirstChat();    //This is a must because MessengerBot always goes to its FB page after seeing any message
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {}
         driver.findElement(By.cssSelector("div[aria-label='Open more actions']")).click();
         //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
 
         //wait.until(webDriver -> ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[role=dialog]")));
         try {
-            Thread.sleep(1000);
+            Thread.sleep(200);
             driver.findElement(By.xpath(".//div[@role='dialog']//*[contains(text(), 'Send a voice clip')]")).click();
-            Thread.sleep(500);
+            Thread.sleep(100);
             driver.findElement(By.cssSelector("div[aria-label=OK]")).click();
         } catch (Exception e) {
             e.printStackTrace();
