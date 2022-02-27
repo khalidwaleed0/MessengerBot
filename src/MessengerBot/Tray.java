@@ -43,11 +43,11 @@ public class Tray {
     private void createMenu() {
         final PopupMenu popup = new PopupMenu();
         MenuItem pauseItem = new MenuItem("Pause");
-        MenuItem logoutItem = new MenuItem("Logout & Exit (slow)");
+        MenuItem logoutItem = new MenuItem("Logout & Exit");
         MenuItem exitItem = new MenuItem("Exit (fast)");
         popup.add(pauseItem);
         popup.add(logoutItem);
-        popup.add(exitItem);
+        //popup.add(exitItem);
         trayIcon.setPopupMenu(popup);
         pauseItem.addActionListener(new ActionListener() {
 
@@ -70,13 +70,13 @@ public class Tray {
                 System.exit(0);
             }
         });
-        exitItem.addActionListener(new ActionListener() {
+        /*exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 Scraper.Singleton().quit();
                 System.exit(0);
             }
-        });
+        });*/
 
     }
 }
