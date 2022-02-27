@@ -15,9 +15,9 @@ public class MainClass {
             e1.printStackTrace();
         }
         AppSetup.Singleton().setup();
-        SplashScreen ss = new SplashScreen();
-        Thread splashScreen = new Thread(ss);
-        splashScreen.start();
+        SplashScreen splashScreen = new SplashScreen();
+        Thread splashScreenThread = new Thread(splashScreen);
+        splashScreenThread.start();
         try {
             Scraper.Singleton().setupAndInitializeSession();
         } catch (SessionNotCreatedException e) {
