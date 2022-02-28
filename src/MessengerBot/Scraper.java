@@ -8,7 +8,6 @@ import java.util.HashMap;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Scraper {
@@ -40,6 +39,13 @@ public class Scraper {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         lookAway();
         isSessionCreated = true;
+    }
+    public void preparePageChat(){  // if messengerbot page is not in the chat list, it will send a message to make it appear in the list
+        try{
+            driver.findElement(By.cssSelector("div[role=gridcell] a[href='/t/107105541890654/']"));
+        }catch (Exception e){
+            sendMessage("Please do not delete this chat. It is very important for MessengerBot to work properly.");
+        }
     }
 
     private HashMap<String, Object> createChromePrefs() {
@@ -99,7 +105,7 @@ public class Scraper {
         }
     }
 
-    private void respondToMessage() throws InterruptedException {
+    private void respondToMessage() {
         if (importantSenders.contains(senderName))
             appendToDisplayedChats();
         else if (newMessage.toLowerCase().contains("important")) {
@@ -156,7 +162,7 @@ public class Scraper {
         driver.findElement(By.cssSelector("div[role=gridcell] a:not(a[href='/t/107105541890654/'])")).click();
     }
     private void waitForChatLoad(){
-        new WebDriverWait(driver,Duration.ofSeconds(30)).until(driver -> driver.findElement(
+        new WebDriverWait(driver,Duration.ofSeconds(2)).until(driver -> driver.findElement(
                 By.cssSelector("div[role=gridcell] a[aria-current=page]:not(a[href='/t/107105541890654/'])")));
     }
     private void lookAway() {

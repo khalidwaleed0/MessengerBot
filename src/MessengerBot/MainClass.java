@@ -30,6 +30,7 @@ public class MainClass {
             showLoginGui();
             showMainGui();
             generalSetup();
+            Scraper.Singleton().preparePageChat();
             scrapLoop();
         }
     }
