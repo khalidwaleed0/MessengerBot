@@ -118,8 +118,8 @@ public class Scraper {
     }
 
     private void appendToDisplayedChats() {
-        this.overlay.displayedMessages.add(newMessage);
-        this.overlay.displayedPhotos.add(getSenderPhoto().getPath());
+        Chat.Singleton().addMessage(newMessage);
+        Chat.Singleton().addPhoto(getSenderPhoto().getPath());
     }
 
     private void cancelCall() throws NoSuchElementException {

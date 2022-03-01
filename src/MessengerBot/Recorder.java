@@ -7,7 +7,7 @@ import lc.kra.system.mouse.GlobalMouseHook;
 import lc.kra.system.mouse.event.GlobalMouseAdapter;
 import lc.kra.system.mouse.event.GlobalMouseEvent;
 
-public class Recorder extends Overlay implements Runnable {
+public class Recorder implements Runnable {
     public static boolean isRecording = false;
     private String recordedKey;
 
@@ -64,16 +64,12 @@ public class Recorder extends Overlay implements Runnable {
     private void sendRecord() {
         if (!isRecording) {
             isRecording = true;
+            Chat.Singleton().addMessage("Recording..");
             Scraper.Singleton().startRecord();
-            try {
-                setupOverlay("Recording");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } else {
             Scraper.Singleton().stopRecord();
             try {
-                setupOverlay("Sending Record");
+                Chat.Singleton().addMessage("Sending Record..");
             } catch (Exception e) {
                 e.printStackTrace();
             }

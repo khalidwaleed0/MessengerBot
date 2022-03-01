@@ -9,48 +9,66 @@ import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.SwingConstants;
 import javax.swing.JWindow;
 
 public class Overlay implements Runnable {
 
-    public ArrayList<String> displayedMessages = new ArrayList<>();
-    public ArrayList<String> displayedPhotos = new ArrayList<>();
-    private boolean overLayFinished = false;
-
+    private JWindow window;
+    private JLabel newChatLabel;
+    private JLabel senderPhotoLabel;
     @Override
     public void run() {
+        EventQueue.invokeLater(() -> {
+            try {
+                setupOverlay();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         while (true) {
             try {
-                System.out.println("Overlay : " + displayedMessages);
-                System.out.println("Overlay Photos : " + displayedPhotos);
-                if ((displayedPhotos.size() != 0) && !Recorder.isRecording) {
-                    EventQueue.invokeLater(() -> {
-                        try {
-                            setupOverlay(displayedMessages.get(0));
-                            overLayFinished = true;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    while (!overLayFinished) {
-                        Thread.sleep(1000);
-                    }
-                    removeSeenChat();
-                    overLayFinished = false;
-                } else
-                    sleep(1000);
+                if (Chat.Singleton().getMessagesSize() != 0)
+                    popupOverlay();
+                else
+                {
+                    Thread.sleep(1000);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void setupOverlay(String newChat) throws Exception {
-        JWindow window = new JWindow();
-        JLabel newChatLabel = new JLabel("");
-        JLabel senderPhotoLabel = new JLabel("");
+    public void popupOverlay(){
+        try {
+            showOverlay();
+            Thread.sleep(128 * Chat.Singleton().getMessage().length());  //Assuming that one character is read in 128ms
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        hideOverlay();
+        Chat.Singleton().removeSeenChat();
+    }
+
+    private void showOverlay() throws IOException {
+        newChatLabel.setText("<html><div style='text-align: right;'>" + Chat.Singleton().getMessage() + "</div></html>");
+        if(Chat.Singleton().getPhotosSize() != 0)
+            senderPhotoLabel.setIcon(getCircularImage());
+        else
+            senderPhotoLabel.setIcon(new ImageIcon(Overlay.class.getResource("/importedFiles/robot64p.png")));
+        window.setVisible(true);
+    }
+
+    private void hideOverlay() {
+        window.setVisible(false);
+    }
+
+    public void setupOverlay() {
+        window = new JWindow();
+        window.setVisible(false);
+        newChatLabel = new JLabel("");
+        senderPhotoLabel = new JLabel("");
         JPanel contentPane = new JPanel();
 
         window.setAlwaysOnTop(true);
@@ -77,13 +95,7 @@ public class Overlay implements Runnable {
         senderPhotoLabel.setBounds(8, 11, 60, 60);
         contentPane.add(senderPhotoLabel);
 
-        newChatLabel.setText("<html><div style='text-align: right;'>" + newChat + "</div></html>");
-        if (!Recorder.isRecording)
-            senderPhotoLabel.setIcon(getCircularImage());
         //senderPhotoLabel.setIcon(new ImageIcon(senderPhotos.get(0)));
-        window.setVisible(true);
-        sleep(128 * newChat.length());  //Assuming that one character is read in 128ms
-        window.dispose();
     }
 
     private ImageIcon getCircularImage() throws IOException {
@@ -93,16 +105,11 @@ public class Overlay implements Runnable {
         g2d.dispose();
         BufferedImage masked = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
         g2d = masked.createGraphics();
-        g2d.drawImage(ImageIO.read(new File(displayedPhotos.get(0))), 0, 0, null);
+        g2d.drawImage(ImageIO.read(new File(Chat.Singleton().getPhotoPath())), 0, 0, null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
         g2d.drawImage(mask, 0, 0, null);
         g2d.dispose();
         return new ImageIcon(masked);
-    }
-
-    private void removeSeenChat() {
-        displayedMessages.remove(0);
-        displayedPhotos.remove(0);
     }
 
     private void sleep(int time) {
