@@ -10,6 +10,10 @@ Now you can play while being able to see only important messages and send record
 <br/>
 (Only messages after the word "important" will be shown).
 <br/>
-<h2>Credits :</h2>
-
-You can get the program icon for free from [here](https://www.flaticon.com/free-icon/android_915456)
+## Requirements :
+* [Google Chrome](https://www.google.com/chrome/)
+* [ChromeDriver Stable](https://chromedriver.chromium.org/)
+* [Java JDK 11](https://www.techspot.com/downloads/5553-java-jdk.html)
+## Credits :
+* .You can get the program icon for free from [here](https://www.flaticon.com/free-icon/android_915456)
+<br/>
