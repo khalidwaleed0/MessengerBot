@@ -28,11 +28,9 @@ public class AppSetup {
         launchFolder = launchFolder.substring(launchFolder.length() - 7);
         if (!launchFolder.equals("Desktop")) {
             JOptionPane.showMessageDialog(null, "Please move the program to the desktop and open it again", "MessengerBot", JOptionPane.INFORMATION_MESSAGE);
-            //System.exit(0);
+            System.exit(0);
         }
         checkChromeInstallation();
-        if (!isChromeDriverInstalled())
-            extractChromeDriver();
         createLoginStatus();
         AutoReplySettings.Singleton().checkBasicReplySettings();
     }
@@ -63,21 +61,6 @@ public class AppSetup {
             System.out.println("problem in already logged in");
         }
         return Boolean.parseBoolean(line);
-    }
-
-    private boolean isChromeDriverInstalled() {
-        File chromedriver = new File(System.getProperty("user.home") + "\\AppData\\Local\\Google\\Chrome\\MessengerBot\\chromedriver83.exe");
-        return chromedriver.exists();
-    }
-
-    private void extractChromeDriver() {
-        InputStream input = (MainClass.class.getResourceAsStream("/importedFiles/chromedriver83.exe"));
-        File chromedriver = new File(System.getProperty("user.home") + "\\AppData\\Local\\Google\\Chrome\\MessengerBot\\chromedriver83.exe");
-        try {
-            FileUtils.copyInputStreamToFile(input, chromedriver);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void createLoginStatus() {

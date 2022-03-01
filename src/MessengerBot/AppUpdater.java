@@ -29,7 +29,7 @@ public class AppUpdater {
     protected static void update() throws IOException {
         Document doc = Jsoup.connect("https://github.com/khalidwaleed0/MessengerBot/releases").get();
         Element latestRelease = doc.selectFirst("h1 .Link--primary");
-        if (!latestRelease.text().equals("v2.0")) {
+        if (!latestRelease.text().equals("v2.1.0")) {
             showUpdateWindow();
             String whatsNew = doc.selectFirst(".markdown-body p").wholeText();
             String latestReleaseLink = "https://github.com/" + doc.selectFirst(".Box.Box--condensed.mt-3 a").attr("href");
