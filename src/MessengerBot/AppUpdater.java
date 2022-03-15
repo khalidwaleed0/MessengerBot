@@ -37,7 +37,6 @@ public class AppUpdater {
             downloadAndShowProgress(latestReleaseLink,fullSize);
             JOptionPane.showMessageDialog(null, whatsNew, "What's New", JOptionPane.INFORMATION_MESSAGE);
             try {
-                Scraper.Singleton().quit();
                 Desktop.getDesktop().open(createBatch());
             } catch (IOException ignored) {
             }
