@@ -25,7 +25,7 @@ public class Scraper {
         }
         return sc;
     }
-
+    public void removeImportantSenders() { importantSenders.clear(); }
     public void passOverlay(Overlay overlay) {
         this.overlay = overlay;
     }

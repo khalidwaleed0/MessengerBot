@@ -42,15 +42,17 @@ public class Tray {
 
     private void createMenu() {
         final PopupMenu popup = new PopupMenu();
+        MenuItem removeImportantSendersItem = new MenuItem("Remove important senders");
         MenuItem pauseItem = new MenuItem("Pause");
         MenuItem logoutItem = new MenuItem("Logout & Exit");
-        MenuItem exitItem = new MenuItem("Exit (fast)");
+        popup.add(removeImportantSendersItem);
         popup.add(pauseItem);
         popup.add(logoutItem);
-        //popup.add(exitItem);
         trayIcon.setPopupMenu(popup);
+        removeImportantSendersItem.addActionListener(e -> {
+            Scraper.Singleton().removeImportantSenders();
+        });
         pauseItem.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!isPaused) {
@@ -70,13 +72,5 @@ public class Tray {
                 System.exit(0);
             }
         });
-        /*exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                Scraper.Singleton().quit();
-                System.exit(0);
-            }
-        });*/
-
     }
 }
