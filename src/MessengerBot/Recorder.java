@@ -61,10 +61,10 @@ public class Recorder implements Runnable {
         });
     }
 
-    private void sendRecord() {
+    public void sendRecord() {
         if (!isRecording) {
             isRecording = true;
-            Chat.Singleton().addMessage("Recording..");
+            Chat.Singleton().addMessage("Recording..  Click again to send");
             Scraper.Singleton().startRecord();
         } else {
             Scraper.Singleton().stopRecord();

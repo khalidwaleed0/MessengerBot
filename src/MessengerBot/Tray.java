@@ -12,14 +12,13 @@ import java.awt.event.ActionListener;
 
 public class Tray {
     private static Tray tr;
+    private final Recorder recorder;
     public boolean isPaused = false;
     private TrayIcon trayIcon;
 
-    public static Tray Singleton() {
-        if (tr == null) {
-            tr = new Tray();
-        }
-        return tr;
+    public Tray(Recorder recorder)
+    {
+        this.recorder = recorder;
     }
 
     public void createTrayIcon() {
@@ -42,15 +41,20 @@ public class Tray {
 
     private void createMenu() {
         final PopupMenu popup = new PopupMenu();
-        MenuItem removeImportantSendersItem = new MenuItem("Remove important senders");
         MenuItem pauseItem = new MenuItem("Pause");
+        MenuItem recordItem = new MenuItem("Send a record");
+        MenuItem removeImportantSendersItem = new MenuItem("Remove important senders");
         MenuItem logoutItem = new MenuItem("Logout & Exit");
-        popup.add(removeImportantSendersItem);
         popup.add(pauseItem);
+        popup.add(recordItem);
+        popup.add(removeImportantSendersItem);
         popup.add(logoutItem);
         trayIcon.setPopupMenu(popup);
         removeImportantSendersItem.addActionListener(e -> {
             Scraper.Singleton().removeImportantSenders();
+        });
+        recordItem.addActionListener(e -> {
+            recorder.sendRecord();
         });
         pauseItem.addActionListener(new ActionListener() {
             @Override

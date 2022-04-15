@@ -8,6 +8,7 @@ import org.openqa.selenium.SessionNotCreatedException;
 
 public class MainClass {
 
+    static Tray tray;
     public static void main(String[] args) {
         try {
             AppUpdater.update();
@@ -85,10 +86,11 @@ public class MainClass {
 
     private static void generalSetup() {
         AppSetup.Singleton().getRecordedKey();
-        Tray.Singleton().createTrayIcon();
         Recorder recorder = new Recorder();
         Thread rec = new Thread(recorder);
         rec.start();
+        tray = new Tray(recorder);
+        tray.createTrayIcon();
         Overlay overlay = new Overlay();
         Scraper.Singleton().passOverlay(overlay);
         Thread overlayThread = new Thread(overlay);
@@ -100,7 +102,7 @@ public class MainClass {
         {
             try
             {
-                if (Recorder.isRecording || Tray.Singleton().isPaused)
+                if (Recorder.isRecording || tray.isPaused)
                 {
                     Thread.sleep(1000);
                 }
