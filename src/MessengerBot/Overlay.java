@@ -101,9 +101,9 @@ public class Overlay implements Runnable {
     private ImageIcon getCircularImage() throws IOException {
         BufferedImage mask = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = mask.createGraphics();
-        g2d.fillOval(0, 0, 55, 55);
+        g2d.fillOval(0, 0, 50, 50);
         g2d.dispose();
-        BufferedImage masked = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage masked = new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB);
         g2d = masked.createGraphics();
         g2d.drawImage(ImageIO.read(new File(Chat.Singleton().getPhotoPath())), 0, 0, null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
